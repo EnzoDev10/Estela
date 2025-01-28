@@ -8,7 +8,7 @@ function App() {
       <div className="flex">
         <FileNavigation />
         <main className="bg-zinc-700 w-full text-white">
-          <p className="h-[5vh]">Hola</p>
+          <p className="h-[5vh]">Tabs Section</p>
           <SnippetEditor />
         </main>
       </div>

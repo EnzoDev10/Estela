@@ -10,18 +10,19 @@ use tauri_plugin_sql::{Migration, MigrationKind};
 pub fn run() {
     let migrations = vec![Migration {
         version: 1,
-        description: "create Snippets table",
+        description: "creates Snippets table",
         sql: "CREATE TABLE IF NOT EXISTS Snippets (  
                 id INTEGER PRIMARY KEY AUTOINCREMENT,  
                 name TEXT NOT NULL,  
-                language TEXT  
+                language TEXT,
+                content TEXT
             )",
         kind: MigrationKind::Up,
     }];
     tauri::Builder::default()
         .plugin(
             tauri_plugin_sql::Builder::default()
-                .add_migrations("sqlite:snippets.db", migrations)
+                .add_migrations("sqlite:main.db", migrations)
                 .build(),
         )
         .plugin(tauri_plugin_opener::init())

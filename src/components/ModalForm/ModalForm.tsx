@@ -34,26 +34,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+/* Imports for form */
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
+// This list should be expanded on the future when icons are used to identify each snippet.
 const posibleLanguages = ["JavaScript", "Python", "Go", "other"] as const;
 
+import Database from "@tauri-apps/plugin-sql";
+
+/* Type used to create the snippets */
+type Snippet = {
+  id: number;
+  name: string;
+  language: string;
+  content?: string;
+};
 interface Props {
   parentMethod: () => void;
 }
-
 const CustomForm = ({ parentMethod }: Props) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const name = values.name;
+    const language = values.language;
+    setSnippet({ name, language });
     parentMethod();
   }
 
   const minChars = 2;
   const maxChars = 50;
   const formSchema = z.object({
-    Name: z
+    name: z
       .string()
       .min(minChars, {
         message: `The name must have atleast ${minChars} characters.`,
@@ -61,16 +73,31 @@ const CustomForm = ({ parentMethod }: Props) => {
       .max(50, {
         message: `The name must be shorter than ${maxChars} characters.`,
       }),
-    Language: z.enum(posibleLanguages),
+    language: z.enum(posibleLanguages),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Name: "",
-      Language: "JavaScript",
+      name: "",
+      language: "JavaScript",
     },
   });
+
+  // Gets the database and inserts a snippet into the table.
+  async function setSnippet(Snippet: Omit<Snippet, "id">) {
+    try {
+      const db = await Database.load("sqlite:main.db");
+      const contentDefaultValue = "placeholderText";
+      // It uses a placeholder text so it is easier to add the code later.
+      await db.execute(
+        "INSERT INTO Snippets (name,language,content) VALUES ($1, $2, $3)",
+        [Snippet.name, Snippet.language, contentDefaultValue]
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <Form {...form}>
@@ -80,7 +107,7 @@ const CustomForm = ({ parentMethod }: Props) => {
       >
         <FormField
           control={form.control}
-          name="Name"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Snippet Name</FormLabel>
@@ -97,7 +124,7 @@ const CustomForm = ({ parentMethod }: Props) => {
         />
         <FormField
           control={form.control}
-          name="Language"
+          name="language"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Language</FormLabel>
@@ -110,7 +137,9 @@ const CustomForm = ({ parentMethod }: Props) => {
                 <SelectContent>
                   {/* Creates options based on possibleLanguages const. */}
                   {posibleLanguages.map((language) => (
-                    <SelectItem value={language}>{language}</SelectItem>
+                    <SelectItem key={language} value={language}>
+                      {language}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -140,11 +169,15 @@ export const ModalForm = () => {
       </DialogTrigger>
       <DialogContent className="bg-zinc-950 text-white border-emerald-500 rounded">
         <DialogHeader>
-          <DialogTitle>Create a snippet</DialogTitle>
+          <DialogTitle>Create a Snippet</DialogTitle>
           <DialogDescription>
-            Provide a name and language to correctly identify the snippet.
+            Provide a name and language to correctly identify it.
           </DialogDescription>
-          <CustomForm parentMethod={() => setOpen(!open)} />
+          <CustomForm
+            parentMethod={() => {
+              /* setOpen(!open); */
+            }}
+          />
         </DialogHeader>
       </DialogContent>
     </Dialog>

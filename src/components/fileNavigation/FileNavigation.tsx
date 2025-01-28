@@ -11,23 +11,35 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-/* Object to save the names of the files and to see their content in future updates.
-nota: agregar type safety a esta array de objetos.
-*/
-const items = [
-  {
-    title: "itemTitle",
-    url: "#",
-  },
-];
-
 import { ModalForm } from "@/components/index";
 
-/* function addItem() {
-  console.log("test");
-} */
+import Database from "@tauri-apps/plugin-sql";
+import { useEffect } from "react";
+
+type Snippet = {
+  id: number;
+  name: string;
+  language: string;
+  content?: string;
+};
+
+async function getSnippets() {
+  try {
+    const db = await Database.load("sqlite:main.db");
+    const dbSnippets = await db.select<Snippet[]>("SELECT * FROM Snippets");
+    // await db.execute('DELETE FROM snippets')
+    console.log(dbSnippets);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export const FileNavigation = () => {
+  /* Gets the snippets on render */
+  useEffect(() => {
+    getSnippets();
+  }, []);
+
   return (
     <SidebarProvider className="flex flex-col">
       <ModalForm />
@@ -37,20 +49,18 @@ export const FileNavigation = () => {
             <SidebarGroupLabel>Your Snippets</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a
-                        href={item.url}
-                        onClick={() => {
-                          alert(`my name is ${item.title}`);
-                        }}
-                      >
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <a
+                      href="#"
+                      onClick={() => {
+                        alert(`my name is placeholderItem`);
+                      }}
+                    >
+                      <span>placeholderItem</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
