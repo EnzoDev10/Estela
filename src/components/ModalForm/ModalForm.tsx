@@ -1,5 +1,5 @@
 // Reack Hooks
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 // shadcn dialogs
 import {
@@ -43,6 +43,9 @@ const posibleLanguages = ["JavaScript", "Python", "Go", "other"] as const;
 
 import Database from "@tauri-apps/plugin-sql";
 
+/* imported context to update shown snippets on form submission */
+import { navContext } from "../fileNavigation/FileNavigation";
+
 /* Type used to create the snippets */
 type Snippet = {
   id: number;
@@ -54,14 +57,6 @@ interface Props {
   parentMethod: () => void;
 }
 const CustomForm = ({ parentMethod }: Props) => {
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    const name = values.name;
-    const language = values.language;
-    setSnippet({ name, language });
-    parentMethod();
-  }
-
   const minChars = 2;
   const maxChars = 50;
   const formSchema = z.object({
@@ -88,7 +83,7 @@ const CustomForm = ({ parentMethod }: Props) => {
   async function setSnippet(Snippet: Omit<Snippet, "id">) {
     try {
       const db = await Database.load("sqlite:main.db");
-      const contentDefaultValue = "placeholderText";
+      const contentDefaultValue = `placeholder Text for ${Snippet.name}`;
       // It uses a placeholder text so it is easier to add the code later.
       await db.execute(
         "INSERT INTO Snippets (name,language,content) VALUES ($1, $2, $3)",
@@ -97,6 +92,14 @@ const CustomForm = ({ parentMethod }: Props) => {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    const name = values.name;
+    const language = values.language;
+    setSnippet({ name, language });
+    parentMethod();
   }
 
   return (
@@ -160,7 +163,7 @@ const CustomForm = ({ parentMethod }: Props) => {
 
 export const ModalForm = () => {
   const [open, setOpen] = useState(false);
-
+  const showSnippets = useContext(navContext);
   return (
     /* Used to close the dialog when the form is submitted. */
     <Dialog open={open} onOpenChange={setOpen}>
@@ -175,7 +178,8 @@ export const ModalForm = () => {
           </DialogDescription>
           <CustomForm
             parentMethod={() => {
-              /* setOpen(!open); */
+              setOpen(!open);
+              showSnippets();
             }}
           />
         </DialogHeader>

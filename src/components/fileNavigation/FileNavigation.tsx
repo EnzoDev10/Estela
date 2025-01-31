@@ -14,54 +14,54 @@ import {
 import { ModalForm } from "@/components/index";
 
 import Database from "@tauri-apps/plugin-sql";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createContext } from "react";
 
 type Snippet = {
   id: number;
   name: string;
   language: string;
-  content?: string;
+  content: string;
 };
-
-async function getSnippets() {
-  try {
-    const db = await Database.load("sqlite:main.db");
-    const dbSnippets = await db.select<Snippet[]>("SELECT * FROM Snippets");
-    // await db.execute('DELETE FROM snippets')
-    console.log(dbSnippets);
-  } catch (error) {
-    console.log(error);
-  }
-}
+export const navContext = createContext<Function>(() => {});
 
 export const FileNavigation = () => {
+  const [snippets, setSnippets] = useState<Snippet[]>([]);
+  async function showSnippets() {
+    try {
+      const db = await Database.load("sqlite:main.db");
+      const dbContent = await db.select<Snippet[]>("SELECT * FROM Snippets");
+      // await db.execute('DELETE FROM snippets')
+
+      setSnippets(dbContent);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const navElements = snippets.map((snippet: Snippet) => (
+    <SidebarMenuItem>
+      <SidebarMenuButton asChild>
+        <button key={snippet.id}>{snippet.name}</button>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  ));
   /* Gets the snippets on render */
   useEffect(() => {
-    getSnippets();
+    showSnippets();
   }, []);
 
   return (
     <SidebarProvider className="flex flex-col">
-      <ModalForm />
+      <navContext.Provider value={showSnippets}>
+        <ModalForm />
+      </navContext.Provider>
       <Sidebar collapsible="none" className="dark">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Your Snippets</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <a
-                      href="#"
-                      onClick={() => {
-                        alert(`my name is placeholderItem`);
-                      }}
-                    >
-                      <span>placeholderItem</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
+              <SidebarMenu>{navElements}</SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
