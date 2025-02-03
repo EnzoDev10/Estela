@@ -25,10 +25,6 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 
   const { updateShownSnippets } = useSnippetsContext();
 
-  function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
-    editorRef.current = editor;
-  }
-
   async function editSnippetContent(newContent: string) {
     try {
       const db = await Database.load("sqlite:main.db");
@@ -40,6 +36,9 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
     } catch (error) {
       console.log(error);
     }
+  }
+  function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
+    editorRef.current = editor;
   }
 
   function onClickHandle() {
@@ -55,7 +54,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
       <Editor
         height="95vh"
         width=""
-        defaultLanguage="javascript"
+        language={currentSnippet?.language}
         theme="vs-dark"
         value={currentSnippet?.content}
         onMount={handleEditorDidMount}

@@ -39,7 +39,15 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 // This list should be expanded on the future when icons are used to identify each snippet.
-const posibleLanguages = ["JavaScript", "Python", "Go", "other"] as const;
+const posibleLanguages = [
+  "javascript",
+  "typescript",
+  "HTML",
+  "less",
+  "css",
+  "scss",
+  "json",
+] as const;
 
 import Database from "@tauri-apps/plugin-sql";
 
@@ -75,7 +83,7 @@ const CustomForm = ({ parentMethod }: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      language: "JavaScript",
+      language: "javascript",
     },
   });
 
@@ -95,7 +103,6 @@ const CustomForm = ({ parentMethod }: Props) => {
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     const name = values.name;
     const language = values.language;
     setSnippet({ name, language });
@@ -147,7 +154,8 @@ const CustomForm = ({ parentMethod }: Props) => {
                 </SelectContent>
               </Select>
               <FormDescription>
-                You can change it later, don't worry.
+                Note: there are languages that don't have intellisense but they
+                still count with basic syntax colorization.
               </FormDescription>
               <FormMessage />
             </FormItem>
