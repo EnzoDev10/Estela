@@ -13,9 +13,9 @@ import {
 
 import { ModalForm } from "@/components/index";
 
-import Database from "@tauri-apps/plugin-sql";
-import { useEffect, useState } from "react";
-import { createContext } from "react";
+import { useEffect } from "react";
+
+import { useContentContext, useSnippetsContext } from "@/App";
 
 type Snippet = {
   id: number;
@@ -23,39 +23,33 @@ type Snippet = {
   language: string;
   content: string;
 };
-export const navContext = createContext<Function>(() => {});
-
 export const FileNavigation = () => {
-  const [snippets, setSnippets] = useState<Snippet[]>([]);
-  async function showSnippets() {
-    try {
-      const db = await Database.load("sqlite:main.db");
-      const dbContent = await db.select<Snippet[]>("SELECT * FROM Snippets");
-      // await db.execute('DELETE FROM snippets')
+  const { updateShownSnippets, snippets } = useSnippetsContext();
+  const { setContentToEdit, setIdContentToEdit } = useContentContext();
 
-      setSnippets(dbContent);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const navElements = snippets.map((snippet: Snippet) => (
-    <SidebarMenuItem>
+  const navElements = snippets?.map((snippet: Snippet) => (
+    <SidebarMenuItem key={snippet.id}>
       <SidebarMenuButton asChild>
-        <button key={snippet.id}>{snippet.name}</button>
+        <button
+          onClick={() => {
+            setContentToEdit(snippet.content);
+            setIdContentToEdit(snippet.id);
+          }}
+        >
+          {snippet.name}
+        </button>
       </SidebarMenuButton>
     </SidebarMenuItem>
   ));
+
   /* Gets the snippets on render */
   useEffect(() => {
-    showSnippets();
+    updateShownSnippets();
   }, []);
 
   return (
     <SidebarProvider className="flex flex-col">
-      <navContext.Provider value={showSnippets}>
-        <ModalForm />
-      </navContext.Provider>
+      <ModalForm />
       <Sidebar collapsible="none" className="dark">
         <SidebarContent>
           <SidebarGroup>

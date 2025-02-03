@@ -1,5 +1,5 @@
 // Reack Hooks
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 // shadcn dialogs
 import {
@@ -44,7 +44,7 @@ const posibleLanguages = ["JavaScript", "Python", "Go", "other"] as const;
 import Database from "@tauri-apps/plugin-sql";
 
 /* imported context to update shown snippets on form submission */
-import { navContext } from "../fileNavigation/FileNavigation";
+import { useSnippetsContext } from "@/App";
 
 /* Type used to create the snippets */
 type Snippet = {
@@ -162,8 +162,9 @@ const CustomForm = ({ parentMethod }: Props) => {
 };
 
 export const ModalForm = () => {
+  const { updateShownSnippets } = useSnippetsContext();
+
   const [open, setOpen] = useState(false);
-  const showSnippets = useContext(navContext);
   return (
     /* Used to close the dialog when the form is submitted. */
     <Dialog open={open} onOpenChange={setOpen}>
@@ -179,7 +180,7 @@ export const ModalForm = () => {
           <CustomForm
             parentMethod={() => {
               setOpen(!open);
-              showSnippets();
+              updateShownSnippets();
             }}
           />
         </DialogHeader>
