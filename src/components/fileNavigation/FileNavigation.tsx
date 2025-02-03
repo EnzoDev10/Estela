@@ -25,15 +25,14 @@ type Snippet = {
 };
 export const FileNavigation = () => {
   const { updateShownSnippets, snippets } = useSnippetsContext();
-  const { setContentToEdit, setIdContentToEdit } = useContentContext();
+  const { setSnippetToEdit } = useContentContext();
 
   const navElements = snippets?.map((snippet: Snippet) => (
     <SidebarMenuItem key={snippet.id}>
       <SidebarMenuButton asChild>
         <button
           onClick={() => {
-            setContentToEdit(snippet.content);
-            setIdContentToEdit(snippet.id);
+            setSnippetToEdit(snippet);
           }}
         >
           {snippet.name}

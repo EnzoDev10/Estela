@@ -12,8 +12,7 @@ import { FileNavigation, SnippetEditor } from "./components/index";
 import Database from "@tauri-apps/plugin-sql";
 
 type ContentContextTypes = {
-  setContentToEdit: Dispatch<SetStateAction<string>>;
-  setIdContentToEdit: Dispatch<SetStateAction<number>>;
+  setSnippetToEdit: Dispatch<SetStateAction<Snippet | undefined>>;
 };
 type SnippetsContextTypes = {
   updateShownSnippets: () => void;
@@ -48,11 +47,9 @@ export function useSnippetsContext() {
 }
 
 function App() {
-  const [contentToEdit, setContentToEdit] = useState<string>("");
-  const [idContentToEdit, setIdContentToEdit] = useState<number>(0);
+  const [snippetToEdit, setSnippetToEdit] = useState<Snippet>();
 
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-
   async function updateShownSnippets() {
     try {
       const db = await Database.load("sqlite:main.db");
@@ -64,7 +61,6 @@ function App() {
       console.log(error);
     }
   }
-
   return (
     <>
       <div className="flex">
@@ -75,20 +71,21 @@ function App() {
           }}
         >
           <contentContext.Provider
-            value={{
-              setContentToEdit: setContentToEdit,
-              setIdContentToEdit: setIdContentToEdit,
-            }}
+            value={{ setSnippetToEdit: setSnippetToEdit }}
           >
             <FileNavigation />
           </contentContext.Provider>
-          <main className="bg-zinc-700 w-full text-white">
-            <p className="h-[5vh]">Tabs Section</p>
+          <main className="bg-zinc-800 w-full text-white">
+            <header className="flex justify-between">
+              <span className=" border-zinc-500 border border-b-0 min-w-16 min-h-7 px-5 py-1.5 text-center">
+                {snippetToEdit?.name}
+              </span>
+              <span className="pr-5  min-w-16 min-h-7 px-5 py-1.5 text-center">
+                {snippetToEdit?.language}
+              </span>
+            </header>
 
-            <SnippetEditor
-              currentContent={contentToEdit}
-              currentId={idContentToEdit}
-            />
+            <SnippetEditor currentSnippet={snippetToEdit} />
           </main>
         </snippetsContext.Provider>
       </div>
