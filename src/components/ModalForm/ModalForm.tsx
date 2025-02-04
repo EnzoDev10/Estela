@@ -65,6 +65,8 @@ interface Props {
   parentMethod: () => void;
 }
 const CustomForm = ({ parentMethod }: Props) => {
+  const { updateShownSnippets } = useSnippetsContext();
+
   const minChars = 2;
   const maxChars = 50;
   const formSchema = z.object({
@@ -97,6 +99,7 @@ const CustomForm = ({ parentMethod }: Props) => {
         "INSERT INTO Snippets (name,language,content) VALUES ($1, $2, $3)",
         [Snippet.name, Snippet.language, contentDefaultValue]
       );
+      updateShownSnippets();
     } catch (error) {
       console.log(error);
     }
@@ -170,8 +173,6 @@ const CustomForm = ({ parentMethod }: Props) => {
 };
 
 export const ModalForm = () => {
-  const { updateShownSnippets } = useSnippetsContext();
-
   const [open, setOpen] = useState(false);
   return (
     /* Used to close the dialog when the form is submitted. */
@@ -185,12 +186,7 @@ export const ModalForm = () => {
           <DialogDescription>
             Provide a name and language to correctly identify it.
           </DialogDescription>
-          <CustomForm
-            parentMethod={() => {
-              setOpen(!open);
-              updateShownSnippets();
-            }}
-          />
+          <CustomForm parentMethod={() => setOpen(!open)} />
         </DialogHeader>
       </DialogContent>
     </Dialog>
