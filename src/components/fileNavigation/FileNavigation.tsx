@@ -1,64 +1,63 @@
 /* Shadcn sidebar */
 import {
-  SidebarProvider,
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+	SidebarProvider,
+	Sidebar,
+	SidebarContent,
+	SidebarGroup,
+	SidebarGroupContent,
+	SidebarGroupLabel,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+} from '@/components/ui/sidebar';
 
-import { ModalForm } from "@/components/index";
+import { ModalForm } from '@/components/index';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import { useContentContext, useSnippetsContext } from "@/App";
+import { useContentContext, useSnippetsContext } from '@/App';
 
 type Snippet = {
-  id: number;
-  name: string;
-  language: string;
-  content: string;
+	id: number;
+	name: string;
+	language: string;
+	content: string;
 };
 export const FileNavigation = () => {
-  const { updateShownSnippets, snippets } = useSnippetsContext();
-  const { setSnippetToEdit } = useContentContext();
+	const { updateShownSnippets, snippets } = useSnippetsContext();
+	const { setSnippetToEdit } = useContentContext();
 
-  const navElements = snippets?.map((snippet: Snippet) => (
-    <SidebarMenuItem key={snippet.id}>
-      <SidebarMenuButton asChild>
-        <button
-          onClick={() => {
-            setSnippetToEdit(snippet);
-          }}
-        >
-          {snippet.name}
-        </button>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
-  ));
+	const navElements = snippets?.map((snippet: Snippet) => (
+		<SidebarMenuItem key={snippet.id} className='my-1'>
+			<SidebarMenuButton asChild>
+				<button
+					onClick={() => {
+						setSnippetToEdit(snippet);
+					}}
+				>
+					{snippet.name}
+				</button>
+			</SidebarMenuButton>
+		</SidebarMenuItem>
+	));
 
-  /* Gets the snippets on render */
-  useEffect(() => {
-    updateShownSnippets();
-  }, []);
+	useEffect(() => {
+		updateShownSnippets();
+	}, []);
 
-  return (
-    <SidebarProvider className="flex flex-col">
-      <ModalForm />
-      <Sidebar collapsible="none" className="dark">
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Your Snippets</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>{navElements}</SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    </SidebarProvider>
-  );
+	return (
+		<SidebarProvider className='flex flex-col'>
+			<ModalForm />
+			<Sidebar collapsible='none' className='dark'>
+				<SidebarContent>
+					<SidebarGroup>
+						<SidebarGroupLabel>Your Snippets</SidebarGroupLabel>
+						<SidebarGroupContent>
+							<SidebarMenu>{navElements}</SidebarMenu>
+						</SidebarGroupContent>
+					</SidebarGroup>
+				</SidebarContent>
+			</Sidebar>
+		</SidebarProvider>
+	);
 };
