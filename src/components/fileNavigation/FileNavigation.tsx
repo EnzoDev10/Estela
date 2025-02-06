@@ -11,11 +11,14 @@ import {
 	SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-import { ModalForm } from '@/components/index';
+import { DeleteAlert, ModalForm } from '@/components/index';
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
+
+import { Button } from '../ui/button';
 
 import { useContentContext, useSnippetsContext } from '@/App';
+import { X } from 'lucide-react';
 
 type Snippet = {
 	id: number;
@@ -26,20 +29,46 @@ type Snippet = {
 export const FileNavigation = () => {
 	const { updateShownSnippets, snippets } = useSnippetsContext();
 	const { setSnippetToEdit } = useContentContext();
+	const [snippetToDelete, setSnippetToDelete] = useState<Snippet | undefined>(
+		undefined
+	);
 
-	const navElements = snippets?.map((snippet: Snippet) => (
-		<SidebarMenuItem key={snippet.id} className='my-1'>
-			<SidebarMenuButton asChild>
-				<button
-					onClick={() => {
-						setSnippetToEdit(snippet);
-					}}
+	const dialogRef = useRef<HTMLButtonElement | null>(null);
+
+	function clickDialogBtn() {
+		if (dialogRef.current) {
+			dialogRef.current.click();
+		}
+	}
+
+	const ListOfSnippets = () => {
+		function handleDeleteAction(snippetToDelete: Snippet) {
+			setSnippetToDelete(snippetToDelete);
+			clickDialogBtn();
+		}
+
+		return snippets?.map((snippet: Snippet) => (
+			<SidebarMenuItem key={snippet.id} className='my-1 flex items-center'>
+				<SidebarMenuButton asChild>
+					<button
+						onClick={() => {
+							setSnippetToEdit(snippet);
+							clickDialogBtn();
+						}}
+					>
+						{snippet.name}
+					</button>
+				</SidebarMenuButton>
+				<Button
+					variant='ghost'
+					className='text-zinc-600'
+					onClick={() => handleDeleteAction(snippet)}
 				>
-					{snippet.name}
-				</button>
-			</SidebarMenuButton>
-		</SidebarMenuItem>
-	));
+					<X />
+				</Button>
+			</SidebarMenuItem>
+		));
+	};
 
 	useEffect(() => {
 		updateShownSnippets();
@@ -47,15 +76,24 @@ export const FileNavigation = () => {
 
 	return (
 		<SidebarProvider className='flex flex-col'>
-			<ModalForm />
-			<Sidebar collapsible='none' className='dark'>
+			<Sidebar collapsible='none' className='dark text-white'>
+				<ModalForm />
 				<SidebarContent>
 					<SidebarGroup>
-						<SidebarGroupLabel>Your Snippets</SidebarGroupLabel>
+						<SidebarGroupLabel className='text-zinc-400'>
+							Your Snippets
+						</SidebarGroupLabel>
 						<SidebarGroupContent>
-							<SidebarMenu>{navElements}</SidebarMenu>
+							<SidebarMenu>
+								<ListOfSnippets />
+							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>
+					<DeleteAlert
+						btnRef={dialogRef}
+						snippetToDelete={snippetToDelete}
+						parentMethod={() => updateShownSnippets()}
+					/>
 				</SidebarContent>
 			</Sidebar>
 		</SidebarProvider>
