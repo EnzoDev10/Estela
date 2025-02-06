@@ -1,4 +1,4 @@
-import {
+import React, {
 	createContext,
 	useState,
 	Dispatch,
@@ -30,26 +30,39 @@ const snippetsContext = createContext<SnippetsContextTypes | undefined>(
 	undefined
 );
 
+export function useSnippetsContext() {
+	const content = useContext(snippetsContext);
+	if (content === undefined) {
+		throw Error('Snippet context error');
+	}
+	return content;
+}
+
+const SnippetsProvider: React.Provider<SnippetsContextTypes> =
+	snippetsContext.Provider as any;
+
 const contentContext = createContext<ContentContextTypes | undefined>(
 	undefined
 );
 
-/* Both functions should be improved to return something else in the case of an error. */
 export function useContentContext() {
-	const context = useContext(contentContext);
-	if (!context) throw Error();
-	return context;
+	const content = useContext(contentContext);
+	if (content == undefined) {
+		throw Error(
+			'UseContentCOntext requires ContentContextProvider to be used higher in the component tree.'
+		);
+	}
+	return content;
 }
-export function useSnippetsContext() {
-	const context = useContext(snippetsContext);
-	if (!context) throw Error();
-	return context;
-}
+
+const ContentProvider: React.Provider<ContentContextTypes> =
+	contentContext.Provider as any;
 
 function App() {
 	const [snippetToEdit, setSnippetToEdit] = useState<Snippet>();
 
 	const [snippets, setSnippets] = useState<Snippet[]>([]);
+
 	async function updateShownSnippets() {
 		try {
 			const db = await Database.load('sqlite:main.db');
@@ -64,17 +77,15 @@ function App() {
 	return (
 		<>
 			<div className='flex'>
-				<snippetsContext.Provider
+				<SnippetsProvider
 					value={{
 						snippets: snippets,
 						updateShownSnippets: updateShownSnippets,
 					}}
 				>
-					<contentContext.Provider
-						value={{ setSnippetToEdit: setSnippetToEdit }}
-					>
+					<ContentProvider value={{ setSnippetToEdit: setSnippetToEdit }}>
 						<FileNavigation />
-					</contentContext.Provider>
+					</ContentProvider>
 					<main className='bg-zinc-800 w-full text-white'>
 						<header className='flex justify-between'>
 							<span className=' border-zinc-500 border border-b-0 min-w-16 min-h-7 px-5 py-1.5 text-center'>
@@ -87,7 +98,7 @@ function App() {
 
 						<SnippetEditor currentSnippet={snippetToEdit} />
 					</main>
-				</snippetsContext.Provider>
+				</SnippetsProvider>
 			</div>
 		</>
 	);
