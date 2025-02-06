@@ -47,7 +47,6 @@ export const FileNavigation = () => {
 					<button
 						onClick={() => {
 							setSnippetToEdit(snippet);
-							clickDialogBtn();
 						}}
 					>
 						{snippet.name}
