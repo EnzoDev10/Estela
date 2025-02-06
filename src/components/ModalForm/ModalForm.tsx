@@ -178,7 +178,9 @@ export const ModalForm = () => {
 		/* Used to close the dialog when the form is submitted. */
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button className='rounded-none text-emerald-500'>Create</Button>
+				<Button variant='ghost' className='rounded-none text-emerald-500'>
+					Create
+				</Button>
 			</DialogTrigger>
 			<DialogContent className='bg-zinc-950 text-white border-emerald-500 rounded'>
 				<DialogHeader>
