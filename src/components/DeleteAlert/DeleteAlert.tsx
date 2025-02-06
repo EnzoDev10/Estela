@@ -22,13 +22,6 @@ async function deleteSnippet(snippetToDelete: Snippet) {
 	}
 }
 
-type Snippet = {
-	id: number;
-	name: string;
-	language: string;
-	content: string;
-};
-
 interface Props {
 	snippetToDelete: Snippet | undefined;
 	parentMethod: () => void;

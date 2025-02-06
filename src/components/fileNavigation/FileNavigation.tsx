@@ -20,12 +20,6 @@ import { Button } from '../ui/button';
 import { useContentContext, useSnippetsContext } from '@/App';
 import { X } from 'lucide-react';
 
-type Snippet = {
-	id: number;
-	name: string;
-	language: string;
-	content: string;
-};
 export const FileNavigation = () => {
 	const { updateShownSnippets, snippets } = useSnippetsContext();
 	const { setSnippetToEdit } = useContentContext();

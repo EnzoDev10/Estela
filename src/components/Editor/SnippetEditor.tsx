@@ -9,13 +9,6 @@ import { useSnippetsContext } from '@/App';
 
 import Database from '@tauri-apps/plugin-sql';
 
-type Snippet = {
-	id: number;
-	name: string;
-	language: string;
-	content: string;
-};
-
 interface Props {
 	currentSnippet: Snippet | undefined;
 }

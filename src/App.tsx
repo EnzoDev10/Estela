@@ -19,13 +19,6 @@ type SnippetsContextTypes = {
 	snippets: Snippet[] | undefined;
 };
 
-type Snippet = {
-	id: number;
-	name: string;
-	language: string;
-	content: string;
-};
-
 const snippetsContext = createContext<SnippetsContextTypes | undefined>(
 	undefined
 );

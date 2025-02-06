@@ -54,13 +54,6 @@ import Database from '@tauri-apps/plugin-sql';
 /* imported context to update shown snippets on form submission */
 import { useSnippetsContext } from '@/App';
 
-/* Type used to create the snippets */
-type Snippet = {
-	id: number;
-	name: string;
-	language: string;
-	content?: string;
-};
 interface Props {
 	parentMethod: () => void;
 }
