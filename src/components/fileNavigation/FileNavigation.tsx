@@ -11,22 +11,25 @@ import {
 	SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
+import { Button } from '../ui/button';
+
+import { X } from 'lucide-react';
+
 import { DeleteAlert, ModalForm } from '@/components/index';
 
 import { useEffect, useState, useRef } from 'react';
 
-import { Button } from '../ui/button';
-
 import { useContentContext, useSnippetsContext } from '@/App';
-import { X } from 'lucide-react';
 
 export const FileNavigation = () => {
 	const { updateShownSnippets, snippets } = useSnippetsContext();
 	const { setSnippetToEdit } = useContentContext();
+
 	const [snippetToDelete, setSnippetToDelete] = useState<Snippet | undefined>(
 		undefined
 	);
 
+	/* Ref created to open dialog with external buttons. */
 	const dialogRef = useRef<HTMLButtonElement | null>(null);
 
 	function clickDialogBtn() {
@@ -35,12 +38,16 @@ export const FileNavigation = () => {
 		}
 	}
 
-	const ListOfSnippets = () => {
-		function handleDeleteAction(snippetToDelete: Snippet) {
-			setSnippetToDelete(snippetToDelete);
-			clickDialogBtn();
-		}
+	/* Functions that helps update the content  */
+	function handleDeleteAction(snippetToDelete: Snippet) {
+		setSnippetToDelete(snippetToDelete);
+		clickDialogBtn();
+	}
 
+	/* 
+	function that populates the component with the existing snippets 
+	and the buttons to interact with them individually. */
+	const ListOfSnippets = () => {
 		return snippets?.map((snippet: Snippet) => (
 			<SidebarMenuItem key={snippet.id} className='my-1 flex items-center'>
 				<SidebarMenuButton asChild>
@@ -63,6 +70,7 @@ export const FileNavigation = () => {
 		));
 	};
 
+	/* Shows the existing snippets on every reload or when opening the app. */
 	useEffect(() => {
 		updateShownSnippets();
 	}, []);
@@ -85,6 +93,7 @@ export const FileNavigation = () => {
 					<DeleteAlert
 						btnRef={dialogRef}
 						snippetToDelete={snippetToDelete}
+						/* Remove this and use it inside the component. */
 						parentMethod={() => updateShownSnippets()}
 					/>
 				</SidebarContent>

@@ -1,6 +1,3 @@
-// Reack Hooks
-import { useState } from 'react';
-
 // shadcn dialogs
 import {
 	Dialog,
@@ -49,14 +46,19 @@ const posibleLanguages = [
 	'json',
 ] as const;
 
+// Reack Hooks
+import { useState } from 'react';
+
 import Database from '@tauri-apps/plugin-sql';
 
-/* imported context to update shown snippets on form submission */
 import { useSnippetsContext } from '@/App';
 
+// only used to close the dialog on submission,
+//  should be replace with a better option.
 interface Props {
 	parentMethod: () => void;
 }
+
 const CustomForm = ({ parentMethod }: Props) => {
 	const { updateShownSnippets } = useSnippetsContext();
 
@@ -82,16 +84,16 @@ const CustomForm = ({ parentMethod }: Props) => {
 		},
 	});
 
-	// Gets the database and inserts a snippet into the table.
+	// Inserts a snippet into the database Table.
 	async function setSnippet(Snippet: Omit<Snippet, 'id'>) {
 		try {
 			const db = await Database.load('sqlite:main.db');
 			const contentDefaultValue = `placeholder Text for ${Snippet.name}`;
-			// It uses a placeholder text so it is easier to add the code later.
 			await db.execute(
 				'INSERT INTO Snippets (name,language,content) VALUES ($1, $2, $3)',
 				[Snippet.name, Snippet.language, contentDefaultValue]
 			);
+			// Once the operation has ended, updates the view.
 			updateShownSnippets();
 		} catch (error) {
 			console.log(error);
