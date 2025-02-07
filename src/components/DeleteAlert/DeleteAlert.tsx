@@ -12,34 +12,31 @@ import {
 
 import Database from '@tauri-apps/plugin-sql';
 
-async function deleteSnippet(snippetToDelete: Snippet) {
-	try {
-		const db = await Database.load('sqlite:main.db');
-		// It uses a placeholder text so it is easier to add the code later.
-		await db.execute('DELETE FROM Snippets where id=$1', [snippetToDelete.id]);
-	} catch (error) {
-		console.log(error);
-	}
-}
+// Deletes a snippet based on the id.
 
 interface Props {
 	snippetToDelete: Snippet | undefined;
-	parentMethod: () => void;
 	btnRef: React.MutableRefObject<HTMLButtonElement | null>;
 }
+import { useSnippetsContext } from '@/App';
 
-export const DeleteAlert = ({
-	snippetToDelete,
-	parentMethod,
-	btnRef,
-}: Props) => {
-	function handleOnClick() {
-		if (snippetToDelete) {
-			deleteSnippet(snippetToDelete);
-			parentMethod();
+export const DeleteAlert = ({ snippetToDelete, btnRef }: Props) => {
+	const { updateShownSnippets } = useSnippetsContext();
+	async function deleteSnippet(id: number) {
+		try {
+			const db = await Database.load('sqlite:main.db');
+			await db.execute('DELETE FROM Snippets where id=$1', [id]);
+			updateShownSnippets();
+		} catch (error) {
+			console.log(error);
 		}
 	}
 
+	function handleOnClick() {
+		if (snippetToDelete) {
+			deleteSnippet(snippetToDelete.id);
+		}
+	}
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>

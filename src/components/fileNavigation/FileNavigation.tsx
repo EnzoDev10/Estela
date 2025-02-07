@@ -90,12 +90,7 @@ export const FileNavigation = () => {
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>
-					<DeleteAlert
-						btnRef={dialogRef}
-						snippetToDelete={snippetToDelete}
-						/* Remove this and use it inside the component. */
-						parentMethod={() => updateShownSnippets()}
-					/>
+					<DeleteAlert btnRef={dialogRef} snippetToDelete={snippetToDelete} />
 				</SidebarContent>
 			</Sidebar>
 		</SidebarProvider>
