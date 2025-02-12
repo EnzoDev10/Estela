@@ -13,9 +13,9 @@ import {
 
 import { Button } from '../ui/button';
 
-import { X } from 'lucide-react';
+import { X, Pen } from 'lucide-react';
 
-import { DeleteAlert, ModalForm } from '@/components/index';
+import { DeleteAlert, ActionDialog } from '@/components/index';
 
 import { useEffect, useState, useRef } from 'react';
 
@@ -23,25 +23,35 @@ import { useContentContext, useSnippetsContext } from '@/App';
 
 export const FileNavigation = () => {
 	const { updateShownSnippets, snippets } = useSnippetsContext();
-	const { setSnippetToEdit } = useContentContext();
-
+	const { setSnippetForEditor } = useContentContext();
 	const [snippetToDelete, setSnippetToDelete] = useState<Snippet | undefined>(
 		undefined
 	);
 
-	/* Ref created to open dialog with external buttons. */
-	const dialogRef = useRef<HTMLButtonElement | null>(null);
+	const [snippetToUpdate, setSnippetToUpdate] = useState<Snippet | undefined>(
+		undefined
+	);
 
-	function clickDialogBtn() {
-		if (dialogRef.current) {
-			dialogRef.current.click();
+	const deleteBtnRef = useRef<HTMLButtonElement | null>(null);
+
+	const updateBtnRef = useRef<HTMLButtonElement | null>(null);
+	function clickDialogBtn(
+		btnRef: React.MutableRefObject<HTMLButtonElement | null>
+	) {
+		if (btnRef.current) {
+			btnRef.current.click();
 		}
 	}
 
 	/* Functions that helps update the content  */
 	function handleDeleteAction(snippetToDelete: Snippet) {
 		setSnippetToDelete(snippetToDelete);
-		clickDialogBtn();
+		clickDialogBtn(deleteBtnRef);
+	}
+
+	function handleUpdateAction(snippetToUpdate: Snippet) {
+		setSnippetToUpdate(snippetToUpdate);
+		clickDialogBtn(updateBtnRef);
 	}
 
 	/* 
@@ -53,12 +63,19 @@ export const FileNavigation = () => {
 				<SidebarMenuButton asChild>
 					<button
 						onClick={() => {
-							setSnippetToEdit(snippet);
+							setSnippetForEditor(snippet);
 						}}
 					>
 						{snippet.name}
 					</button>
 				</SidebarMenuButton>
+				<Button
+					variant='ghost'
+					className='text-zinc-600'
+					onClick={() => handleUpdateAction(snippet)}
+				>
+					<Pen />
+				</Button>
 				<Button
 					variant='ghost'
 					className='text-zinc-600'
@@ -78,7 +95,7 @@ export const FileNavigation = () => {
 	return (
 		<SidebarProvider className='flex flex-col'>
 			<Sidebar collapsible='none' className='dark text-white'>
-				<ModalForm />
+				<ActionDialog action='create' />
 				<SidebarContent>
 					<SidebarGroup>
 						<SidebarGroupLabel className='text-zinc-400'>
@@ -90,7 +107,15 @@ export const FileNavigation = () => {
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>
-					<DeleteAlert btnRef={dialogRef} snippetToDelete={snippetToDelete} />
+					<DeleteAlert
+						btnRef={deleteBtnRef}
+						snippetToDelete={snippetToDelete}
+					/>
+					<ActionDialog
+						action='update'
+						btnRef={updateBtnRef}
+						snippetToUpdate={snippetToUpdate}
+					/>
 				</SidebarContent>
 			</Sidebar>
 		</SidebarProvider>
