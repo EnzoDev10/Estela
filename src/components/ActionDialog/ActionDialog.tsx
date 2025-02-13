@@ -13,6 +13,7 @@ import { Button } from '../ui/button';
 import { ActionForm } from './Form';
 
 import { useState } from 'react';
+import { Plus } from 'lucide-react';
 
 interface Props {
 	action: string;
@@ -27,13 +28,12 @@ export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 		<AlertDialog open={open} onOpenChange={setOpen}>
 			<AlertDialogTrigger asChild>
 				<Button
-					className={`rounded text-emerald-600 ${
+					className={`focus-visible:ring-2 focus-visible:ring-emerald-600 hover:bg-zinc-800 hover:text-emerald-400 rounded p-1 ml-auto text-emerald-500 ${
 						action === 'update' ? 'hidden' : ''
 					}  `}
-					variant='ghost'
 					ref={btnRef}
 				>
-					{action === 'create' ? 'create' : ''}
+					{action === 'create' ? <Plus /> : ''}
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent className='bg-zinc-900 border-emerald-600 text-white rounded'>

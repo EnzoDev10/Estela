@@ -9,11 +9,11 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	SidebarTrigger,
+	SidebarMenuAction,
 } from '@/components/ui/sidebar';
 
-import { Button } from '../ui/button';
-
-import { X, Pen } from 'lucide-react';
+import { Pen, TrashIcon } from 'lucide-react';
 
 import { DeleteAlert, ActionDialog } from '@/components/index';
 
@@ -59,7 +59,10 @@ export const FileNavigation = () => {
 	and the buttons to interact with them individually. */
 	const ListOfSnippets = () => {
 		return snippets?.map((snippet: Snippet) => (
-			<SidebarMenuItem key={snippet.id} className='my-1 flex items-center'>
+			<SidebarMenuItem
+				key={snippet.id}
+				className='focus-visible:*:ring-emerald-600 my-1 flex items-center'
+			>
 				<SidebarMenuButton asChild>
 					<button
 						onClick={() => {
@@ -69,20 +72,19 @@ export const FileNavigation = () => {
 						{snippet.name}
 					</button>
 				</SidebarMenuButton>
-				<Button
-					variant='ghost'
-					className='text-zinc-600'
+
+				<SidebarMenuAction
+					className='text-zinc-700 mr-10'
 					onClick={() => handleUpdateAction(snippet)}
 				>
-					<Pen />
-				</Button>
-				<Button
-					variant='ghost'
-					className='text-zinc-600'
+					<Pen /> <span></span>
+				</SidebarMenuAction>
+				<SidebarMenuAction
+					className='text-zinc-700 '
 					onClick={() => handleDeleteAction(snippet)}
 				>
-					<X />
-				</Button>
+					<TrashIcon />
+				</SidebarMenuAction>
 			</SidebarMenuItem>
 		));
 	};
@@ -93,13 +95,15 @@ export const FileNavigation = () => {
 	}, []);
 
 	return (
-		<SidebarProvider className='flex flex-col'>
-			<Sidebar collapsible='none' className='dark text-white'>
-				<ActionDialog action='create' />
+		<SidebarProvider className=' bg-zinc-900 flex flex-col text-white'>
+			<SidebarTrigger className='ml-auto mr-1' />
+
+			<Sidebar className='mt-7 text-white border-none'>
 				<SidebarContent>
 					<SidebarGroup>
-						<SidebarGroupLabel className='text-zinc-400'>
+						<SidebarGroupLabel className='text-zinc-400 p-0'>
 							Your Snippets
+							<ActionDialog action='create' />
 						</SidebarGroupLabel>
 						<SidebarGroupContent>
 							<SidebarMenu>
