@@ -97,11 +97,12 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 				onClick={saveContent}
 				className='absolute bottom-4 right-10 bg-emerald-500 text-black'
 				variant='secondary'
+				title='Ctrl + S'
 				// Prevents the button from being clicked when
 				// there are no changes made or the editor doesn't have a snippet inside.
 				disabled={!currentSnippet || !wereChangesMade ? true : false}
 			>
-				Ctrl + S
+				Save
 			</Button>
 		</section>
 	);

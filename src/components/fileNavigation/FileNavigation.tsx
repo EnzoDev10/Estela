@@ -9,8 +9,9 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarTrigger,
 	SidebarMenuAction,
+	useSidebar,
+	SidebarTrigger,
 } from '@/components/ui/sidebar';
 
 import { Pen, TrashIcon } from 'lucide-react';
@@ -58,6 +59,8 @@ export const FileNavigation = () => {
 	and the buttons to interact with them individually. */
 
 	const ListOfSnippets = () => {
+		const { setOpenMobile } = useSidebar();
+
 		return snippets?.map((snippet: Snippet) => (
 			<SidebarMenuItem
 				key={snippet.id}
@@ -67,6 +70,7 @@ export const FileNavigation = () => {
 					<button
 						onClick={() => {
 							setSnippetForEditor(snippet);
+							setOpenMobile(false);
 						}}
 					>
 						{snippet.name}
@@ -96,8 +100,10 @@ export const FileNavigation = () => {
 
 	return (
 		<SidebarProvider className='bg-zinc-900 flex flex-col text-white'>
-			<SidebarTrigger className='ml-auto mr-1' />
-
+			<SidebarTrigger
+				className='focus:bg-emerald-600 ml-auto mr-1'
+				title='Ctrl + b'
+			/>
 			<Sidebar className='mt-7 text-white border-none'>
 				<SidebarContent>
 					<SidebarGroup>

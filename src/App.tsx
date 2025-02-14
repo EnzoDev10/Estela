@@ -63,7 +63,7 @@ function App() {
 	const [snippetForEditor, setSnippetForEditor] = useState<Snippet>();
 
 	const [snippets, setSnippets] = useState<Snippet[]>([]);
-
+	console.log(snippetForEditor);
 	/* 
 	connects to the database and updates a state variable that
 	 contains all the currently created snippets. */
