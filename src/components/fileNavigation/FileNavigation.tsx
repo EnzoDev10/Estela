@@ -53,10 +53,10 @@ export const FileNavigation = () => {
 		setSnippetToUpdate(snippetToUpdate);
 		clickDialogBtn(updateBtnRef);
 	}
-
 	/* 
 	function that populates the component with the existing snippets 
 	and the buttons to interact with them individually. */
+
 	const ListOfSnippets = () => {
 		return snippets?.map((snippet: Snippet) => (
 			<SidebarMenuItem
@@ -95,7 +95,7 @@ export const FileNavigation = () => {
 	}, []);
 
 	return (
-		<SidebarProvider className=' bg-zinc-900 flex flex-col text-white'>
+		<SidebarProvider className='bg-zinc-900 flex flex-col text-white'>
 			<SidebarTrigger className='ml-auto mr-1' />
 
 			<Sidebar className='mt-7 text-white border-none'>

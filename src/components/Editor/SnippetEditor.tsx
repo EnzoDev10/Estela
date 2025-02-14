@@ -1,6 +1,6 @@
 import { Editor } from '@monaco-editor/react';
 import { Button } from '../ui/button';
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { editor } from 'monaco-editor';
 
@@ -43,19 +43,36 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 		editorRef.current = editor;
 	}
 
-	function onClickHandle() {
+	function saveContent() {
 		if (wereChangesMade) {
 			const contentOfEditor = editorRef.current?.getValue();
 
-			if (contentOfEditor) {
+			if (contentOfEditor != undefined) {
 				snippet.content = contentOfEditor;
 				editSnippetContent(contentOfEditor);
 				setWereChangesMade(false);
+			} else {
+				console.log('empty');
 			}
 		}
 	}
 
-	/* Changes appearance only if the content of the editor is not equal to the original content. */
+	const saveBtnRef = useRef<HTMLButtonElement>(null);
+
+	const handleKeyPress = useCallback((event: KeyboardEvent) => {
+		if (event.ctrlKey && event.key === 's') {
+			saveBtnRef.current?.click();
+		}
+	}, []);
+
+	useEffect(() => {
+		document.addEventListener('keydown', handleKeyPress);
+
+		return () => {
+			document.removeEventListener('keydown', handleKeyPress);
+		};
+	}, [handleKeyPress]);
+
 	function checkIfChanged() {
 		if (currentSnippet?.content === editorRef.current?.getValue()) {
 			setWereChangesMade(false);
@@ -76,12 +93,15 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 				onChange={() => checkIfChanged()}
 			/>
 			<Button
-				onClick={onClickHandle}
+				ref={saveBtnRef}
+				onClick={saveContent}
 				className='absolute bottom-4 right-10 bg-emerald-500 text-black'
 				variant='secondary'
-				disabled={!wereChangesMade}
+				// Prevents the button from being clicked when
+				// there are no changes made or the editor doesn't have a snippet inside.
+				disabled={!currentSnippet || !wereChangesMade ? true : false}
 			>
-				save
+				Ctrl + S
 			</Button>
 		</section>
 	);
