@@ -18,10 +18,12 @@ interface Props {
 	snippetToDelete: Snippet | undefined;
 	btnRef: React.MutableRefObject<HTMLButtonElement | null>;
 }
-import { useSnippetsContext } from '@/App';
+import { useSnippetsContext, useContentContext } from '@/App';
 
 export const DeleteAlert = ({ snippetToDelete, btnRef }: Props) => {
 	const { updateShownSnippets } = useSnippetsContext();
+	const { snippetForEditor, setSnippetForEditor } = useContentContext();
+
 	async function deleteSnippet(id: number) {
 		try {
 			const db = await Database.load('sqlite:main.db');
@@ -35,8 +37,13 @@ export const DeleteAlert = ({ snippetToDelete, btnRef }: Props) => {
 	function handleOnClick() {
 		if (snippetToDelete) {
 			deleteSnippet(snippetToDelete.id);
+
+			if (snippetToDelete.id === snippetForEditor?.id) {
+				setSnippetForEditor(undefined);
+			}
 		}
 	}
+
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
