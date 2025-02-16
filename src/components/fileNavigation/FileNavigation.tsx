@@ -61,6 +61,34 @@ export const FileNavigation = () => {
 	const ListOfSnippets = () => {
 		const { setOpenMobile } = useSidebar();
 
+		const languagesIconClasses: { [key: string]: string } = {
+			javascript: 'devicon-javascript-plain',
+			typescript: 'devicon-typescript-plain',
+			css: 'devicon-css3-plain',
+			less: 'devicon-less-plain-wordmark',
+			scss: 'devicon-sass-original',
+			HTML: 'devicon-html5-plain',
+			json: 'devicon-json-plain',
+			XML: 'devicon-xml-plain',
+			php: 'devicon-php-plain',
+			CSharp: 'devicon-csharp-plain',
+			CPlusPlus: 'devicon-cplusplus-plain',
+			markdown: 'devicon-markdown-original',
+			java: 'devicon-java-plain',
+			VB: 'devicon-visualbasic-plain',
+			Coffeescript: 'devicon-coffeescript-original',
+			Handlebars: 'devicon-handlebars-original',
+			batch: 'none',
+			pug: 'none',
+			FSharp: 'devicon-fsharp-plain',
+			lua: 'devicon-lua-plain',
+			Powershell: 'devicon-powershell-plain',
+			python: 'devicon-python-plain',
+			Ruby: 'devicon-ruby-plain',
+			R: 'devicon-r-plain',
+			ObjectiveC: 'devicon-objectivec-plain',
+		};
+
 		return snippets?.map((snippet: Snippet) => (
 			<SidebarMenuItem
 				key={snippet.id}
@@ -69,10 +97,14 @@ export const FileNavigation = () => {
 				<SidebarMenuButton asChild>
 					<button
 						onClick={() => {
+							snippet.iconClass = languagesIconClasses[snippet.language];
 							setSnippetForEditor(snippet);
 							setOpenMobile(false);
 						}}
 					>
+						<i
+							className={`text-lg ${languagesIconClasses[snippet.language]}`}
+						></i>
 						{snippet.name}
 					</button>
 				</SidebarMenuButton>

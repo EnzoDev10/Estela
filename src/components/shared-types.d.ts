@@ -3,4 +3,5 @@ type Snippet = {
 	name: string;
 	language: string;
 	content?: string;
+	iconClass?: string;
 };
