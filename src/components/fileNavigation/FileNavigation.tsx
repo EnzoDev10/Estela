@@ -89,7 +89,9 @@ export const FileNavigation = () => {
 			ObjectiveC: 'devicon-objectivec-plain',
 		};
 
-		return snippets?.map((snippet: Snippet) => (
+		const reversedSnippets = snippets?.toReversed();
+
+		return reversedSnippets?.map((snippet: Snippet) => (
 			<SidebarMenuItem
 				key={snippet.id}
 				className='focus-visible:*:ring-emerald-600 my-1 flex items-center'
