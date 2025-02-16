@@ -4,9 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { editor } from 'monaco-editor';
 
-import { useSnippetsContext } from '@/App';
+import { useSnippetsContext, useContentContext } from '@/App';
 
 import Database from '@tauri-apps/plugin-sql';
+import { X } from 'lucide-react';
 
 interface Props {
 	currentSnippet: Snippet | undefined;
@@ -16,12 +17,14 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 	// Ref to get the content of the editor.
 	const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 	const { updateShownSnippets } = useSnippetsContext();
+	const { setSnippetForEditor } = useContentContext();
 
 	const [wereChangesMade, setWereChangesMade] = useState(false);
 
 	// Declaring a variable just to update the content inside the editor.
 	// Tried to also use it for Props but it gave errors.
 
+	// ! revisar esto, puede que sea innecesario.
 	let snippet: Snippet;
 
 	if (currentSnippet) snippet = currentSnippet;
@@ -32,7 +35,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 			const db = await Database.load('sqlite:main.db');
 			await db.execute('UPDATE Snippets SET content = $1 WHERE id = $2', [
 				newContent,
-				snippet.id,
+				currentSnippet?.id,
 			]);
 			updateShownSnippets();
 		} catch (error) {
@@ -43,6 +46,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 		editorRef.current = editor;
 	}
 
+	// ! revisar esto por que no lo entiendo.
 	function saveContent() {
 		if (wereChangesMade) {
 			const contentOfEditor = editorRef.current?.getValue();
@@ -81,29 +85,57 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 		}
 	}
 
+	// Cleans the editor when the snippet is removed with the button that is inside the header.
+	function editorValueSetter() {
+		return currentSnippet ? currentSnippet?.content : '';
+	}
+
+	let editorValue = editorValueSetter();
+
 	return (
-		<section>
-			<Editor
-				height='95vh'
-				width=''
-				language={currentSnippet?.language}
-				theme='vs-dark'
-				value={currentSnippet?.content}
-				onMount={handleEditorDidMount}
-				onChange={() => checkIfChanged()}
-			/>
-			<Button
-				ref={saveBtnRef}
-				onClick={saveContent}
-				className='absolute bottom-4 right-10 bg-emerald-500 text-black'
-				variant='secondary'
-				title='Ctrl + S'
-				// Prevents the button from being clicked when
-				// there are no changes made or the editor doesn't have a snippet inside.
-				disabled={!currentSnippet || !wereChangesMade ? true : false}
-			>
-				Save
-			</Button>
-		</section>
+		<>
+			<header className='flex justify-between'>
+				<div className='flex gap-4 h-10 items-center px-2 border-zinc-500 border border-b-0 min-h-7 bg-zinc-800'>
+					<span className='text-sm'>
+						<i className={` mr-2 ${currentSnippet?.iconClass}`}></i>
+						{currentSnippet?.name}
+					</span>
+
+					{currentSnippet && (
+						<Button
+							variant='link'
+							className='p-1 bg-zinc-800 text-zinc-400 w-fit ml-auto hover:text-red-400'
+							onClick={() => {
+								setSnippetForEditor(undefined);
+							}}
+						>
+							<X />
+						</Button>
+					)}
+				</div>
+			</header>
+			<section>
+				<Editor
+					height='100vh'
+					language={currentSnippet?.language}
+					theme='vs-dark'
+					value={editorValue}
+					onMount={handleEditorDidMount}
+					onChange={() => checkIfChanged()}
+				/>
+				<Button
+					ref={saveBtnRef}
+					onClick={saveContent}
+					className='absolute bottom-4 right-10 bg-emerald-500 text-black'
+					variant='secondary'
+					title='Ctrl + S'
+					// Prevents the button from being clicked when
+					// there are no changes made or the editor doesn't have a snippet inside.
+					disabled={!currentSnippet || !wereChangesMade ? true : false}
+				>
+					Save
+				</Button>
+			</section>
+		</>
 	);
 };

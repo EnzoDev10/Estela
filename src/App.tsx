@@ -40,6 +40,7 @@ the data of the chosen snippet to be edited.
  */
 type ContentContextTypes = {
 	setSnippetForEditor: Dispatch<SetStateAction<Snippet | undefined>>;
+	snippetForEditor: Snippet | undefined;
 };
 
 const contentContext = createContext<ContentContextTypes | undefined>(
@@ -60,10 +61,11 @@ const ContentProvider: React.Provider<ContentContextTypes> =
 	contentContext.Provider as any;
 
 function App() {
-	const [snippetForEditor, setSnippetForEditor] = useState<Snippet>();
+	const [snippetForEditor, setSnippetForEditor] = useState<
+		Snippet | undefined
+	>();
 
 	const [snippets, setSnippets] = useState<Snippet[]>([]);
-	console.log(snippetForEditor);
 	/* 
 	connects to the database and updates a state variable that
 	 contains all the currently created snippets. */
@@ -87,21 +89,17 @@ function App() {
 						updateShownSnippets: updateShownSnippets,
 					}}
 				>
-					<ContentProvider value={{ setSnippetForEditor: setSnippetForEditor }}>
+					<ContentProvider
+						value={{
+							setSnippetForEditor: setSnippetForEditor,
+							snippetForEditor: snippetForEditor,
+						}}
+					>
 						<FileNavigation />
+						<main className='bg-zinc-800 w-full text-white'>
+							<SnippetEditor currentSnippet={snippetForEditor} />
+						</main>
 					</ContentProvider>
-					<main className='bg-zinc-800 w-full text-white'>
-						<header className='flex justify-between'>
-							<span className=' border-zinc-500 border border-b-0 min-w-16 min-h-7 px-5 py-1.5 text-center'>
-								{snippetForEditor?.name}
-							</span>
-							<span className='pr-5  min-w-16 min-h-7 px-5 py-1.5 text-center'>
-								{snippetForEditor?.language}
-							</span>
-						</header>
-
-						<SnippetEditor currentSnippet={snippetForEditor} />
-					</main>
 				</SnippetsProvider>
 			</div>
 		</>
