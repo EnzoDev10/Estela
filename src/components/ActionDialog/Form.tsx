@@ -38,26 +38,27 @@ const availableLanguages = [
 	'HTML',
 	'json',
 	'XML',
-	'Php',
-	'C#',
-	'C++',
-	'razor',
+	'php',
+	// los dos C deben estar en su forma original para funcionar en el editor.
+	'CSharp',
+	'CPlusPlus',
+	//
 	'markdown',
-	'diff',
 	'java',
 	'VB',
 	'Coffeescript',
-	'handlebars',
-	'batch',
-	'pug',
-	'f#',
+	'Handlebars',
+	// batch y pug no tienen icono ni colorizacion
+	'Batch',
+	'Pug',
+	'FSharp',
 	'lua',
-	'powershell',
+	'Powershell',
 	'python',
-	'ruby',
+	'Ruby',
 	'sass',
 	'R',
-	'Objective-C',
+	'ObjectiveC',
 ] as const;
 
 interface actionFormProps {
@@ -108,7 +109,7 @@ export const ActionForm = ({
 			const db = await Database.load('sqlite:main.db');
 			await db.execute(
 				'INSERT INTO Snippets (name,language,content) VALUES ($1, $2, $3)',
-				[snippet.name, snippet.language, `placeholder Text for ${snippet.name}`]
+				[snippet.name, snippet.language, '']
 			);
 			updateShownSnippets();
 		} catch (error) {
