@@ -28,38 +28,56 @@ import Database from '@tauri-apps/plugin-sql';
 import { useSnippetsContext } from '@/App';
 import { SetStateAction } from 'react';
 
-/* list of  */
 const availableLanguages = [
 	'javascript',
 	'typescript',
 	'css',
-	'less',
-	'scss',
-	'HTML',
+	'html',
 	'json',
-	'XML',
-	'php',
-	// los dos C deben estar en su forma original para funcionar en el editor.
-	'CSharp',
-	'CPlusPlus',
-	//
-	'markdown',
-	'java',
-	'VB',
-	'Coffeescript',
-	'Handlebars',
-	// batch y pug no tienen icono ni colorizacion
-	'Batch',
-	'Pug',
-	'FSharp',
-	'lua',
-	'Powershell',
+	'colorization',
 	'python',
-	'Ruby',
-	'sass',
-	'R',
-	'ObjectiveC',
+	'java',
+	'csharp',
+	'cpp',
+	'c',
+	'ruby',
+	'php',
+	'swift',
+	'go',
+	'rust',
+	'kotlin',
+	'sql',
+	'shell',
+	'dart',
+	'elixir',
+	'scala',
+	'plaintext',
 ] as const;
+
+const IconClasses: { [key: string]: string } = {
+	javascript: 'devicon-javascript-plain',
+	typescript: 'devicon-typescript-plain',
+	css: 'devicon-css3-plain',
+	html: 'devicon-html5-plain',
+	json: 'devicon-json-plain',
+	python: 'devicon-python-plain',
+	java: 'devicon-java-plain',
+	csharp: 'devicon-csharp-plain',
+	cpp: 'devicon-cplusplus-plain',
+	c: 'devicon-c-plain',
+	ruby: 'devicon-ruby-plain',
+	php: 'devicon-php-plain',
+	swift: 'devicon-swift-plain',
+	go: 'devicon-go-plain',
+	rust: 'devicon-rust-plain',
+	kotlin: 'devicon-kotlin-plain',
+	sql: 'devicon-sqlite-plain',
+	shell: 'devicon-bash-plain',
+	dart: 'devicon-dart-plain',
+	elixir: 'devicon-elixir-plain',
+	scala: 'devicon-scala-plain',
+	plaintext: 'plain',
+};
 
 interface actionFormProps {
 	action: string;
@@ -104,12 +122,12 @@ export const ActionForm = ({
 	const { updateShownSnippets } = useSnippetsContext();
 
 	// Inserts a snippet into the database Table.
-	async function setSnippet(snippet: Omit<Snippet, 'id'>) {
+	async function setSnippet(snippet: Pick<Snippet, 'name' | 'language'>) {
 		try {
 			const db = await Database.load('sqlite:main.db');
 			await db.execute(
-				'INSERT INTO Snippets (name,language,content) VALUES ($1, $2, $3)',
-				[snippet.name, snippet.language, '']
+				'INSERT INTO Snippets (name,language, iconClass) VALUES ($1, $2, $3)',
+				[snippet.name, snippet.language, IconClasses[snippet.language]]
 			);
 			updateShownSnippets();
 		} catch (error) {
@@ -119,15 +137,13 @@ export const ActionForm = ({
 
 	// updates a snippet name and language.
 	async function updateSnippet(
-		name: string,
-		language: string,
-		id: number | undefined
+		snippet: Pick<Snippet, 'name' | 'language' | 'id'>
 	) {
 		try {
 			const db = await Database.load('sqlite:main.db');
 			await db.execute(
 				'UPDATE Snippets SET name = $1, language = $2 WHERE id = $3',
-				[name, language, id]
+				[snippet.name, snippet.language, snippet.id]
 			);
 			updateShownSnippets();
 		} catch (error) {
@@ -142,8 +158,10 @@ export const ActionForm = ({
 		if (action == 'create') {
 			setSnippet({ name, language });
 		} else {
-			const id = snippetToUpdate?.id;
-			updateSnippet(name, language, id);
+			if (snippetToUpdate) {
+				const id = snippetToUpdate.id;
+				updateSnippet({ name, language, id });
+			}
 		}
 	}
 

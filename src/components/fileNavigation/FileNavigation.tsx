@@ -14,7 +14,7 @@ import {
 	SidebarTrigger,
 } from '@/components/ui/sidebar';
 
-import { Pen, TrashIcon } from 'lucide-react';
+import { FileText, Pen, TrashIcon } from 'lucide-react';
 
 import { DeleteAlert, ActionDialog } from '@/components/index';
 
@@ -61,34 +61,6 @@ export const FileNavigation = () => {
 	const ListOfSnippets = () => {
 		const { setOpenMobile } = useSidebar();
 
-		const languagesIconClasses: { [key: string]: string } = {
-			javascript: 'devicon-javascript-plain',
-			typescript: 'devicon-typescript-plain',
-			css: 'devicon-css3-plain',
-			less: 'devicon-less-plain-wordmark',
-			scss: 'devicon-sass-original',
-			HTML: 'devicon-html5-plain',
-			json: 'devicon-json-plain',
-			XML: 'devicon-xml-plain',
-			php: 'devicon-php-plain',
-			CSharp: 'devicon-csharp-plain',
-			CPlusPlus: 'devicon-cplusplus-plain',
-			markdown: 'devicon-markdown-original',
-			java: 'devicon-java-plain',
-			VB: 'devicon-visualbasic-plain',
-			Coffeescript: 'devicon-coffeescript-original',
-			Handlebars: 'devicon-handlebars-original',
-			batch: 'none',
-			pug: 'none',
-			FSharp: 'devicon-fsharp-plain',
-			lua: 'devicon-lua-plain',
-			Powershell: 'devicon-powershell-plain',
-			python: 'devicon-python-plain',
-			Ruby: 'devicon-ruby-plain',
-			R: 'devicon-r-plain',
-			ObjectiveC: 'devicon-objectivec-plain',
-		};
-
 		const reversedSnippets = snippets?.toReversed();
 
 		return reversedSnippets?.map((snippet: Snippet) => (
@@ -99,14 +71,17 @@ export const FileNavigation = () => {
 				<SidebarMenuButton asChild>
 					<button
 						onClick={() => {
-							snippet.iconClass = languagesIconClasses[snippet.language];
+							setSnippetForEditor(snippet);
 							setSnippetForEditor(snippet);
 							setOpenMobile(false);
+							console.log(snippet);
 						}}
 					>
-						<i
-							className={`text-lg ${languagesIconClasses[snippet.language]}`}
-						></i>
+						{snippet.iconClass == 'plain' ? (
+							<FileText />
+						) : (
+							<i className={`text-lg ${snippet.iconClass}`}></i>
+						)}
 						{snippet.name}
 					</button>
 				</SidebarMenuButton>

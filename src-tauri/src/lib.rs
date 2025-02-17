@@ -15,7 +15,8 @@ pub fn run() {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,  
                 name TEXT NOT NULL,  
                 language TEXT,
-                content TEXT
+                content TEXT,
+                iconClass TEXT
             )",
         kind: MigrationKind::Up,
     }];

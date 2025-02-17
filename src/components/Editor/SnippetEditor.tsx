@@ -14,7 +14,6 @@ interface Props {
 }
 
 export const SnippetEditor = ({ currentSnippet }: Props) => {
-	// Ref to get the content of the editor.
 	const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 	const { updateShownSnippets } = useSnippetsContext();
 	const { setSnippetForEditor } = useContentContext();
@@ -116,7 +115,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 			</header>
 			<section>
 				<Editor
-					height='100vh'
+					height='99vh'
 					language={currentSnippet?.language}
 					theme='vs-dark'
 					value={editorValue}
