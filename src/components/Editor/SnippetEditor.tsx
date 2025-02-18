@@ -54,8 +54,6 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 				snippet.content = contentOfEditor;
 				editSnippetContent(contentOfEditor);
 				setWereChangesMade(false);
-			} else {
-				console.log('empty');
 			}
 		}
 	}
@@ -92,7 +90,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 	let editorValue = editorValueSetter();
 
 	return (
-		<>
+		<main className='bg-zinc-800 w-full text-white'>
 			<header className='flex justify-between'>
 				<div className='flex gap-4 h-10 items-center px-2 border-zinc-500 border border-b-0 min-h-7 bg-zinc-800'>
 					<span className='text-sm'>
@@ -113,28 +111,26 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 					)}
 				</div>
 			</header>
-			<section>
-				<Editor
-					height='99vh'
-					language={currentSnippet?.language}
-					theme='vs-dark'
-					value={editorValue}
-					onMount={handleEditorDidMount}
-					onChange={() => checkIfChanged()}
-				/>
-				<Button
-					ref={saveBtnRef}
-					onClick={saveContent}
-					className='absolute bottom-4 right-10 bg-emerald-500 text-black'
-					variant='secondary'
-					title='Ctrl + S'
-					// Prevents the button from being clicked when
-					// there are no changes made or the editor doesn't have a snippet inside.
-					disabled={!currentSnippet || !wereChangesMade ? true : false}
-				>
-					Save
-				</Button>
-			</section>
-		</>
+			<Editor
+				language={currentSnippet?.language}
+				theme='vs-dark'
+				value={editorValue}
+				onMount={handleEditorDidMount}
+				onChange={() => checkIfChanged()}
+			/>
+			<Button
+				ref={saveBtnRef}
+				onClick={saveContent}
+				className='
+				transition delay-75 hover:scale-110 absolute bottom-8 right-12 bg-emerald-500 text-black 
+				focus:translate-y-3 disabled:bg-white hover:bg-emerald-600  '
+				title='Ctrl + S'
+				// Prevents the button from being clicked when
+				// there are no changes made or the editor doesn't have a snippet inside.
+				disabled={!currentSnippet || !wereChangesMade ? true : false}
+			>
+				Save
+			</Button>
+		</main>
 	);
 };

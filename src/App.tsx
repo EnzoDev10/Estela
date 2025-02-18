@@ -82,7 +82,7 @@ function App() {
 	}
 	return (
 		<>
-			<div className='flex'>
+			<div className='flex w-full h-screen overflow-y-hidden'>
 				<SnippetsProvider
 					value={{
 						snippets: snippets,
@@ -96,9 +96,7 @@ function App() {
 						}}
 					>
 						<FileNavigation />
-						<main className='bg-zinc-800 w-full text-white'>
-							<SnippetEditor currentSnippet={snippetForEditor} />
-						</main>
+						<SnippetEditor currentSnippet={snippetForEditor} />
 					</ContentProvider>
 				</SnippetsProvider>
 			</div>
