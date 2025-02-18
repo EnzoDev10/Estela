@@ -82,7 +82,7 @@ function App() {
 	}
 	return (
 		<>
-			<div className='flex w-full h-screen overflow-y-hidden'>
+			<div className='flex w-full h-screen overflow-hidden'>
 				<SnippetsProvider
 					value={{
 						snippets: snippets,
