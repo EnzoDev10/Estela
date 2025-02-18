@@ -1,4 +1,3 @@
-// shadcn forms
 import {
 	Form,
 	FormControl,
@@ -90,6 +89,8 @@ export const ActionForm = ({
 	closeDialog,
 	snippetToUpdate,
 }: actionFormProps) => {
+	const { snippets, updateShownSnippets } = useSnippetsContext();
+
 	const formSchema = z.object({
 		name: z
 			.string()
@@ -98,14 +99,31 @@ export const ActionForm = ({
 			})
 			.max(50, {
 				message: 'The name must be shorter than 50 characters.',
-			}),
+			})
+			.trim()
+			// Shows error if the name is already being used
+			// except on updates where the snippet has the same name.
+			.refine(
+				(name) => {
+					if (snippetToUpdate && name === snippetToUpdate.name) {
+						return true;
+					} else {
+						const exists = !snippets?.some((snippet) => snippet.name === name);
+
+						return exists;
+					}
+				},
+				{
+					message: 'A snippet with this name already exists.',
+				}
+			),
 		language: z.enum(availableLanguages),
 	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			name: '',
+			name: snippetToUpdate ? snippetToUpdate.name : '',
 			language: 'javascript',
 		},
 	});
@@ -118,8 +136,6 @@ export const ActionForm = ({
 			return 'javascript';
 		}
 	}
-
-	const { updateShownSnippets } = useSnippetsContext();
 
 	// Inserts a snippet into the database Table.
 	async function setSnippet(snippet: Pick<Snippet, 'name' | 'language'>) {
