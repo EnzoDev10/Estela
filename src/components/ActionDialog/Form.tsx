@@ -33,7 +33,7 @@ const availableLanguages = [
 	'css',
 	'html',
 	'json',
-	'colorization',
+	'↓ languages without intellisense',
 	'python',
 	'java',
 	'csharp',
@@ -227,7 +227,15 @@ export const ActionForm = ({
 								</FormControl>
 								<SelectContent>
 									{availableLanguages.map((language) => (
-										<SelectItem key={language} value={language}>
+										<SelectItem
+											key={language}
+											value={language}
+											disabled={
+												language === '↓ languages without intellisense'
+													? true
+													: false
+											}
+										>
 											{language}
 										</SelectItem>
 									))}
