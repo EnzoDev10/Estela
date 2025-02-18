@@ -158,8 +158,13 @@ export const ActionForm = ({
 		try {
 			const db = await Database.load('sqlite:main.db');
 			await db.execute(
-				'UPDATE Snippets SET name = $1, language = $2 WHERE id = $3',
-				[snippet.name, snippet.language, snippet.id]
+				'UPDATE Snippets SET name = $1, language = $2, iconClass = $3 WHERE id = $4',
+				[
+					snippet.name,
+					snippet.language,
+					IconClasses[snippet.language],
+					snippet.id,
+				]
 			);
 			updateShownSnippets();
 		} catch (error) {
