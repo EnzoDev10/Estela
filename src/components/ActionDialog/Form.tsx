@@ -188,24 +188,17 @@ export const ActionForm = ({
 
 	return (
 		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className=' text-start space-y-8'
-				id='form-id'
-			>
+			<form onSubmit={form.handleSubmit(onSubmit)} className=' ' id='form-id'>
 				<FormField
 					control={form.control}
 					name='name'
 					render={({ field }) => (
-						<FormItem>
+						<FormItem className='mb-3'>
 							<FormLabel>Name</FormLabel>
 							<FormControl>
 								<Input placeholder='Ej. Navbar Template' {...field} />
 							</FormControl>
-							<FormDescription>
-								Tip: Name it something that would help you identify it easily on
-								the future.
-							</FormDescription>
+
 							<FormMessage />
 						</FormItem>
 					)}
@@ -225,7 +218,7 @@ export const ActionForm = ({
 										<SelectValue />
 									</SelectTrigger>
 								</FormControl>
-								<SelectContent>
+								<SelectContent className='text-white bg-zinc-800'>
 									{availableLanguages.map((language) => (
 										<SelectItem
 											key={language}
@@ -241,7 +234,7 @@ export const ActionForm = ({
 									))}
 								</SelectContent>
 							</Select>
-							<FormDescription>
+							<FormDescription className='pb-2'>
 								Note: Languages after JSON don't have IntelliSense and only come
 								with basic syntax colorization.
 							</FormDescription>

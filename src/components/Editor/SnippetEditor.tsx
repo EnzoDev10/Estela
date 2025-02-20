@@ -121,9 +121,9 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 			<Button
 				ref={saveBtnRef}
 				onClick={saveContent}
+				variant='save'
 				className='
-				transition delay-75 hover:scale-110 absolute bottom-8 right-12 bg-emerald-500 text-black 
-				focus:translate-y-3 disabled:bg-white hover:bg-emerald-600  '
+				absolute bottom-8 right-12 hover:scale-110'
 				title='Ctrl + S'
 				// Prevents the button from being clicked when
 				// there are no changes made or the editor doesn't have a snippet inside.

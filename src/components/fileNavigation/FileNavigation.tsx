@@ -74,7 +74,6 @@ export const FileNavigation = () => {
 							setSnippetForEditor(snippet);
 							setSnippetForEditor(snippet);
 							setOpenMobile(false);
-							console.log(snippet);
 						}}
 					>
 						{snippet.iconClass == 'plain' ? (
@@ -110,7 +109,7 @@ export const FileNavigation = () => {
 	return (
 		<SidebarProvider className='bg-zinc-900 flex flex-col text-white'>
 			<SidebarTrigger
-				className='focus:bg-emerald-600 ml-auto mr-1'
+				className='focus:bg-emerald-600 ml-auto p-3'
 				title='Ctrl + b'
 			/>
 			<Sidebar className='mt-7 text-white border-none'>
