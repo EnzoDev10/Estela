@@ -36,7 +36,7 @@ export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 					{action === 'create' ? <Plus /> : ''}
 				</Button>
 			</AlertDialogTrigger>
-			<AlertDialogContent className='bg-zinc-900 border-emerald-600 text-white rounded-xl max-w-96'>
+			<AlertDialogContent className='bg-zinc-900 border-emerald-600 text-white rounded-xl w-fit min-w-80'>
 				<AlertDialogHeader>
 					<AlertDialogTitle>
 						{action === 'create'

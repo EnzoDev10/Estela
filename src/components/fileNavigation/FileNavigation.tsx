@@ -66,7 +66,7 @@ export const FileNavigation = () => {
 		return reversedSnippets?.map((snippet: Snippet) => (
 			<SidebarMenuItem
 				key={snippet.id}
-				className='focus-visible:*:ring-emerald-600 my-1 flex items-center'
+				className='text-ellipsis line-clamp-1 focus-visible:*:ring-emerald-600 my-1 flex items-center'
 			>
 				<SidebarMenuButton asChild>
 					<button
@@ -81,7 +81,7 @@ export const FileNavigation = () => {
 						) : (
 							<i className={`text-lg ${snippet.iconClass}`}></i>
 						)}
-						{snippet.name}
+						<span className='w-2/3'>{snippet.name}</span>
 					</button>
 				</SidebarMenuButton>
 

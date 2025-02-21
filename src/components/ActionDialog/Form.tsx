@@ -97,8 +97,8 @@ export const ActionForm = ({
 			.min(2, {
 				message: 'The name must have atleast 2 characters.',
 			})
-			.max(50, {
-				message: 'The name must be shorter than 50 characters.',
+			.max(40, {
+				message: 'The name must be shorter than 40 characters.',
 			})
 			.trim()
 			// Shows error if the name is already being used
