@@ -1,16 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
 	:root {
-		--radius: 0.5rem;
 		--sidebar-background: 240 5.9% 10%;
 		--sidebar-foreground: 240 4.8% 95.9%;
 		--sidebar-primary: 224.3 76.3% 48%;
 		--sidebar-primary-foreground: 0 0% 100%;
-		--sidebar-accent: 240 3.7% 15.9%;
-		--sidebar-accent-foreground: 240 4.8% 95.9%;
 		--sidebar-border: 240 3.7% 15.9%;
-		--sidebar-ring: 217.2 91.2% 59.8%;
+		--sidebar-ring: 282, 28%, 60%;
+		--radius: 0.5rem;
+
+		--editor-background: #24283b;
+		--focus-color: color-mix(in oklch, #b050ff 100%, #000 20%);
+	}
+	.codename {
+		--sidebar-background: 240 5.9% 10%;
+		--sidebar-foreground: 27 5% 90%;
+		--sidebar-primary: 27 96% 61%;
+		--sidebar-primary-foreground: 0 0% 0%;
+		--sidebar-border: 27 30% 18%;
+		--sidebar-ring: 337, 70%, 40%;
+		--radius: 0.5rem;
+
+		--focus-color: color-mix(in oklch, #842142 100%, #000 20%);
+		--editor-background: #151515;
 	}
 }

@@ -188,7 +188,7 @@ export const ActionForm = ({
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className=' ' id='form-id'>
+			<form onSubmit={form.handleSubmit(onSubmit)} id='form-id'>
 				<FormField
 					control={form.control}
 					name='name'

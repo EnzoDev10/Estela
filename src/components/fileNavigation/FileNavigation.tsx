@@ -16,15 +16,20 @@ import {
 
 import { FileText, Pen, TrashIcon } from 'lucide-react';
 
-import { DeleteAlert, ActionDialog } from '@/components/index';
+import { DeleteAlert, ActionDialog, SettingsMenu } from '@/components/index';
 
 import { useEffect, useState, useRef } from 'react';
 
-import { useContentContext, useSnippetsContext } from '@/App';
+import {
+	useContentContext,
+	useSnippetsContext,
+	useSettingsContext,
+} from '@/App';
 
 export const FileNavigation = () => {
 	const { updateShownSnippets, snippets } = useSnippetsContext();
 	const { setSnippetForEditor } = useContentContext();
+	const { theme } = useSettingsContext();
 	const [snippetToDelete, setSnippetToDelete] = useState<Snippet | undefined>(
 		undefined
 	);
@@ -64,32 +69,29 @@ export const FileNavigation = () => {
 		const reversedSnippets = snippets?.toReversed();
 
 		return reversedSnippets?.map((snippet: Snippet) => (
-			<SidebarMenuItem
-				key={snippet.id}
-				className='text-ellipsis line-clamp-1 focus-visible:*:ring-emerald-600 my-1 flex items-center'
-			>
-				<SidebarMenuButton asChild>
-					<button
-						onClick={() => {
-							setSnippetForEditor(snippet);
-							setSnippetForEditor(snippet);
-							setOpenMobile(false);
-						}}
-					>
-						{snippet.iconClass == 'plain' ? (
-							<FileText />
-						) : (
-							<i className={`text-lg ${snippet.iconClass}`}></i>
-						)}
-						<span className='w-2/3'>{snippet.name}</span>
-					</button>
+			<SidebarMenuItem key={snippet.id} className='my-1 flex items-center'>
+				<SidebarMenuButton
+					onClick={() => {
+						setSnippetForEditor(snippet);
+						setSnippetForEditor(snippet);
+						setOpenMobile(false);
+					}}
+				>
+					{snippet.iconClass == 'plain' ? (
+						<FileText />
+					) : (
+						<i className={`text-lg ${snippet.iconClass}`}></i>
+					)}
+					<span className='w-2/3 text-ellipsis line-clamp-1'>
+						{snippet.name}
+					</span>
 				</SidebarMenuButton>
 
 				<SidebarMenuAction
 					className='text-zinc-700 mr-10'
 					onClick={() => handleUpdateAction(snippet)}
 				>
-					<Pen /> <span></span>
+					<Pen />
 				</SidebarMenuAction>
 				<SidebarMenuAction
 					className='text-zinc-700 '
@@ -107,17 +109,20 @@ export const FileNavigation = () => {
 	}, []);
 
 	return (
-		<SidebarProvider className='bg-zinc-900 flex flex-col text-white'>
+		<SidebarProvider className='bg-sidebar flex flex-col text-white'>
 			<SidebarTrigger
-				className='focus:bg-emerald-600 ml-auto p-3'
+				className='focus-visible:bg-sidebar-ring ml-auto p-3'
 				title='Ctrl + b'
 			/>
 			<Sidebar className='mt-7 text-white border-none'>
 				<SidebarContent>
-					<SidebarGroup>
-						<SidebarGroupLabel className='text-zinc-400 p-0'>
+					<SidebarGroup className={theme}>
+						<SidebarGroupLabel className='p-0'>
 							Your Snippets
-							<ActionDialog action='create' />
+							<div className='ml-auto flex gap-3 items-center mr-[2px]'>
+								<SettingsMenu />
+								<ActionDialog action='create' />
+							</div>
 						</SidebarGroupLabel>
 						<SidebarGroupContent>
 							<SidebarMenu>

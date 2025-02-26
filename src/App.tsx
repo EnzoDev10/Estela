@@ -25,7 +25,7 @@ const snippetsContext = createContext<SnippetsContextTypes | undefined>(
 
 export function useSnippetsContext() {
 	const content = useContext(snippetsContext);
-	if (content === undefined) {
+	if (!content) {
 		throw Error('Snippet context error');
 	}
 	return content;
@@ -34,10 +34,6 @@ export function useSnippetsContext() {
 const SnippetsProvider: React.Provider<SnippetsContextTypes> =
 	snippetsContext.Provider as any;
 
-/*
-contentContext provides the setter for a state variable that contains
-the data of the chosen snippet to be edited.
- */
 type ContentContextTypes = {
 	setSnippetForEditor: Dispatch<SetStateAction<Snippet | undefined>>;
 	snippetForEditor: Snippet | undefined;
@@ -49,7 +45,7 @@ const contentContext = createContext<ContentContextTypes | undefined>(
 
 export function useContentContext() {
 	const content = useContext(contentContext);
-	if (content == undefined) {
+	if (!content) {
 		throw Error(
 			'UseContentCOntext requires ContentContextProvider to be used higher in the component tree.'
 		);
@@ -60,10 +56,36 @@ export function useContentContext() {
 const ContentProvider: React.Provider<ContentContextTypes> =
 	contentContext.Provider as any;
 
+type SettingsContextType = {
+	theme: string;
+	setTheme: Dispatch<SetStateAction<string>>;
+	appLanguage: string;
+	setAppLanguage: Dispatch<SetStateAction<string>>;
+};
+
+const SettingsContext = createContext<SettingsContextType | null>(null);
+
+export function useSettingsContext() {
+	const content = useContext(SettingsContext);
+	if (!content) {
+		throw Error(
+			'UseSettingsContext requires SettingsContextProvider to be used higher in the component tree.'
+		);
+	}
+	return content;
+}
 function App() {
 	const [snippetForEditor, setSnippetForEditor] = useState<
 		Snippet | undefined
 	>();
+	const [theme, setTheme] = useState(() => {
+		const saved = localStorage.getItem('theme');
+		if (saved) {
+			const initialValue = JSON.parse(saved);
+			return initialValue || 'tokyo';
+		}
+	});
+	const [appLanguage, setAppLanguage] = useState('english');
 
 	const [snippets, setSnippets] = useState<Snippet[]>([]);
 	/* 
@@ -80,26 +102,31 @@ function App() {
 			console.log(error);
 		}
 	}
+
 	return (
 		<>
-			<div className='flex w-full h-screen overflow-hidden'>
-				<SnippetsProvider
-					value={{
-						snippets: snippets,
-						updateShownSnippets: updateShownSnippets,
-					}}
-				>
-					<ContentProvider
+			<SettingsContext.Provider
+				value={{ theme, setTheme, appLanguage, setAppLanguage }}
+			>
+				<div className={`${theme} flex w-full h-screen overflow-hidden`}>
+					<SnippetsProvider
 						value={{
-							setSnippetForEditor: setSnippetForEditor,
-							snippetForEditor: snippetForEditor,
+							snippets,
+							updateShownSnippets,
 						}}
 					>
-						<FileNavigation />
-						<SnippetEditor currentSnippet={snippetForEditor} />
-					</ContentProvider>
-				</SnippetsProvider>
-			</div>
+						<ContentProvider
+							value={{
+								setSnippetForEditor,
+								snippetForEditor,
+							}}
+						>
+							<FileNavigation />
+							<SnippetEditor currentSnippet={snippetForEditor} />
+						</ContentProvider>
+					</SnippetsProvider>
+				</div>
+			</SettingsContext.Provider>
 		</>
 	);
 }

@@ -15,6 +15,8 @@ import { ActionForm } from './Form';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 
+import { useSettingsContext } from '@/App';
+
 interface Props {
 	action: string;
 	btnRef?: React.MutableRefObject<HTMLButtonElement | null>;
@@ -24,11 +26,12 @@ interface Props {
 /* Component solely created to show the form and pass some props to it. */
 export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 	const [open, setOpen] = useState(false);
+	const { theme } = useSettingsContext();
 	return (
 		<AlertDialog open={open} onOpenChange={setOpen}>
 			<AlertDialogTrigger asChild>
 				<Button
-					className={`focus-visible:ring-2 focus-visible:ring-emerald-600 hover:bg-zinc-800 hover:text-emerald-600 rounded p-1 ml-auto text-emerald-500 ${
+					className={`focus-visible:ring-2 focus-visible:ring-sidebar-ring hover:bg-zinc-800 rounded p-1 ml-auto text-sidebar-ring ${
 						action === 'update' ? 'hidden' : ''
 					}  `}
 					ref={btnRef}
@@ -36,7 +39,9 @@ export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 					{action === 'create' ? <Plus /> : ''}
 				</Button>
 			</AlertDialogTrigger>
-			<AlertDialogContent className='bg-zinc-900 border-emerald-600 text-white rounded-xl w-fit min-w-80'>
+			<AlertDialogContent
+				className={`${theme} bg-zinc-900 border-sidebar-ring text-white rounded-xl w-fit min-w-80`}
+			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>
 						{action === 'create'
@@ -56,7 +61,11 @@ export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 				/>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<Button variant='save' className='capitalize' form='form-id'>
+					<Button
+						variant='save'
+						className='focus:bg-[var(--focus-color)] hover:bg-[var(--focus-color)] bg-sidebar-ring capitalize'
+						form='form-id'
+					>
 						{action}
 					</Button>
 				</AlertDialogFooter>

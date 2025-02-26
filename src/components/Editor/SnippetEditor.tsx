@@ -1,13 +1,16 @@
-import { Editor } from '@monaco-editor/react';
+import { Editor, type Monaco } from '@monaco-editor/react';
 import { Button } from '../ui/button';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { editor } from 'monaco-editor';
-
+import codename from './themes/codename.json';
+import tokyo from './themes/tokyo.json';
 import { useSnippetsContext, useContentContext } from '@/App';
 
 import Database from '@tauri-apps/plugin-sql';
 import { X } from 'lucide-react';
+
+import { useSettingsContext } from '@/App';
 
 interface Props {
 	currentSnippet: Snippet | undefined;
@@ -17,6 +20,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 	const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 	const { updateShownSnippets } = useSnippetsContext();
 	const { setSnippetForEditor } = useContentContext();
+	const { theme } = useSettingsContext();
 
 	const [wereChangesMade, setWereChangesMade] = useState(false);
 
@@ -43,6 +47,18 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 	}
 	function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
 		editorRef.current = editor;
+	}
+	function handleEditorDidMountBefore(monaco: Monaco) {
+		monaco.editor.defineTheme('codename', {
+			base: 'vs-dark',
+			inherit: true,
+			...codename,
+		});
+		monaco.editor.defineTheme('tokyo', {
+			base: 'vs-dark',
+			inherit: true,
+			...tokyo,
+		});
 	}
 
 	// ! revisar esto por que no lo entiendo.
@@ -90,9 +106,9 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 	let editorValue = editorValueSetter();
 
 	return (
-		<main className='bg-zinc-800 w-full text-white'>
+		<main className='bg-sidebar w-full text-white'>
 			<header className='flex justify-between'>
-				<div className='flex gap-4 h-10 items-center px-2 border-zinc-500 border border-b-0 min-h-7 bg-zinc-800'>
+				<div className='flex gap-4 h-10 items-center px-2 border-zinc-500 border border-b-0 border-l-0 min-h-7 bg-[var(--editor-background)]'>
 					<span className='text-sm'>
 						<i className={` mr-2 ${currentSnippet?.iconClass}`}></i>
 						{currentSnippet?.name}
@@ -100,8 +116,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 
 					{currentSnippet && (
 						<Button
-							variant='link'
-							className='p-1 bg-zinc-800 text-zinc-400 w-fit ml-auto hover:text-red-400'
+							className='p-1  text-zinc-400 w-fit ml-auto hover:text-red-400'
 							onClick={() => {
 								setSnippetForEditor(undefined);
 							}}
@@ -113,17 +128,28 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 			</header>
 			<Editor
 				language={currentSnippet?.language}
-				theme='vs-dark'
+				theme={theme}
 				value={editorValue}
+				options={{
+					fontSize: 14,
+					fontFamily: 'Jetbrains-Mono',
+					fontLigatures: true,
+					wordWrap: 'on',
+					cursorBlinking: 'expand',
+					formatOnPaste: true,
+					suggest: {
+						showFields: true,
+						showFunctions: true,
+					},
+				}}
+				beforeMount={handleEditorDidMountBefore}
 				onMount={handleEditorDidMount}
 				onChange={() => checkIfChanged()}
 			/>
 			<Button
 				ref={saveBtnRef}
 				onClick={saveContent}
-				variant='save'
-				className='
-				absolute bottom-8 right-12 hover:scale-110'
+				className='bg-sidebar-ring hover:bg-[var(--focus-color)] absolute bottom-8 right-12 hover:scale-110'
 				title='Ctrl + S'
 				// Prevents the button from being clicked when
 				// there are no changes made or the editor doesn't have a snippet inside.
