@@ -1,7 +1,6 @@
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -26,6 +25,7 @@ import Database from '@tauri-apps/plugin-sql';
 
 import { useSnippetsContext } from '@/App';
 import { SetStateAction } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const availableLanguages = [
 	'javascript',
@@ -90,15 +90,16 @@ export const ActionForm = ({
 	snippetToUpdate,
 }: actionFormProps) => {
 	const { snippets, updateShownSnippets } = useSnippetsContext();
+	const { t } = useTranslation();
 
 	const formSchema = z.object({
 		name: z
 			.string()
 			.min(2, {
-				message: 'The name must have atleast 2 characters.',
+				message: t('nameMessage.short'),
 			})
 			.max(40, {
-				message: 'The name must be shorter than 40 characters.',
+				message: t('nameMessage.long'),
 			})
 			.trim()
 			// Shows error if the name is already being used
@@ -114,7 +115,7 @@ export const ActionForm = ({
 					}
 				},
 				{
-					message: 'A snippet with this name already exists.',
+					message: t('nameMessage.alreadyUsed'),
 				}
 			),
 		language: z.enum(availableLanguages),
@@ -188,13 +189,17 @@ export const ActionForm = ({
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} id='form-id'>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className='flex flex-col gap-2'
+				id='form-id'
+			>
 				<FormField
 					control={form.control}
 					name='name'
 					render={({ field }) => (
-						<FormItem className='mb-3'>
-							<FormLabel>Name</FormLabel>
+						<FormItem>
+							<FormLabel>{t('nameLabel')}</FormLabel>
 							<FormControl>
 								<Input placeholder='Ej. Navbar Template' {...field} />
 							</FormControl>
@@ -208,7 +213,7 @@ export const ActionForm = ({
 					name='language'
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Language</FormLabel>
+							<FormLabel>{t('languageLabel')}</FormLabel>
 							<Select
 								onValueChange={field.onChange}
 								defaultValue={selectDefaultValue()}
@@ -229,15 +234,13 @@ export const ActionForm = ({
 													: false
 											}
 										>
-											{language}
+											{language === '↓ languages without intellisense'
+												? t('lngWarning')
+												: language}
 										</SelectItem>
 									))}
 								</SelectContent>
 							</Select>
-							<FormDescription className='pb-2'>
-								Note: Languages after JSON don't have IntelliSense and only come
-								with basic syntax colorization.
-							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}

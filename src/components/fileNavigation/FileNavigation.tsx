@@ -26,6 +26,8 @@ import {
 	useSettingsContext,
 } from '@/App';
 
+import { useTranslation } from 'react-i18next';
+
 export const FileNavigation = () => {
 	const { updateShownSnippets, snippets } = useSnippetsContext();
 	const { setSnippetForEditor } = useContentContext();
@@ -41,6 +43,7 @@ export const FileNavigation = () => {
 	const deleteBtnRef = useRef<HTMLButtonElement | null>(null);
 
 	const updateBtnRef = useRef<HTMLButtonElement | null>(null);
+
 	function clickDialogBtn(
 		btnRef: React.MutableRefObject<HTMLButtonElement | null>
 	) {
@@ -108,6 +111,8 @@ export const FileNavigation = () => {
 		updateShownSnippets();
 	}, []);
 
+	const { t } = useTranslation();
+
 	return (
 		<SidebarProvider className='bg-sidebar flex flex-col text-white'>
 			<SidebarTrigger
@@ -118,18 +123,20 @@ export const FileNavigation = () => {
 				<SidebarContent>
 					<SidebarGroup className={theme}>
 						<SidebarGroupLabel className='p-0'>
-							Your Snippets
+							{t('sidebarTitle')}
 							<div className='ml-auto flex gap-3 items-center mr-[2px]'>
 								<SettingsMenu />
 								<ActionDialog action='create' />
 							</div>
 						</SidebarGroupLabel>
+
 						<SidebarGroupContent>
 							<SidebarMenu>
 								<ListOfSnippets />
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>
+
 					<DeleteAlert
 						btnRef={deleteBtnRef}
 						snippetToDelete={snippetToDelete}

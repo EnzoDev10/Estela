@@ -11,6 +11,7 @@ import Database from '@tauri-apps/plugin-sql';
 import { X } from 'lucide-react';
 
 import { useSettingsContext } from '@/App';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
 	currentSnippet: Snippet | undefined;
@@ -21,6 +22,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 	const { updateShownSnippets } = useSnippetsContext();
 	const { setSnippetForEditor } = useContentContext();
 	const { theme } = useSettingsContext();
+	const { t } = useTranslation();
 
 	const [wereChangesMade, setWereChangesMade] = useState(false);
 
@@ -155,7 +157,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 				// there are no changes made or the editor doesn't have a snippet inside.
 				disabled={!currentSnippet || !wereChangesMade ? true : false}
 			>
-				Save
+				{t('saveBtn')}
 			</Button>
 		</main>
 	);

@@ -10,10 +10,7 @@ import './App.css';
 import { FileNavigation, SnippetEditor } from './components/index';
 
 import Database from '@tauri-apps/plugin-sql';
-/* 
-SnippetsContext shares both the state variable that contains 
-the created snippets and a function to update it based on the content of the database.
-*/
+
 type SnippetsContextTypes = {
 	updateShownSnippets: () => void;
 	snippets: Snippet[] | undefined;
@@ -56,14 +53,12 @@ export function useContentContext() {
 const ContentProvider: React.Provider<ContentContextTypes> =
 	contentContext.Provider as any;
 
-type SettingsContextType = {
+type SettingsContextTypes = {
 	theme: string;
 	setTheme: Dispatch<SetStateAction<string>>;
-	appLanguage: string;
-	setAppLanguage: Dispatch<SetStateAction<string>>;
 };
 
-const SettingsContext = createContext<SettingsContextType | null>(null);
+const SettingsContext = createContext<SettingsContextTypes | null>(null);
 
 export function useSettingsContext() {
 	const content = useContext(SettingsContext);
@@ -74,6 +69,10 @@ export function useSettingsContext() {
 	}
 	return content;
 }
+
+const SettingsProvider: React.Provider<SettingsContextTypes> =
+	SettingsContext.Provider as any;
+
 function App() {
 	const [snippetForEditor, setSnippetForEditor] = useState<
 		Snippet | undefined
@@ -85,8 +84,6 @@ function App() {
 			return initialValue || 'tokyo';
 		}
 	});
-	const [appLanguage, setAppLanguage] = useState('english');
-
 	const [snippets, setSnippets] = useState<Snippet[]>([]);
 	/* 
 	connects to the database and updates a state variable that
@@ -105,9 +102,7 @@ function App() {
 
 	return (
 		<>
-			<SettingsContext.Provider
-				value={{ theme, setTheme, appLanguage, setAppLanguage }}
-			>
+			<SettingsProvider value={{ theme, setTheme }}>
 				<div className={`${theme} flex w-full h-screen overflow-hidden`}>
 					<SnippetsProvider
 						value={{
@@ -126,7 +121,7 @@ function App() {
 						</ContentProvider>
 					</SnippetsProvider>
 				</div>
-			</SettingsContext.Provider>
+			</SettingsProvider>
 		</>
 	);
 }

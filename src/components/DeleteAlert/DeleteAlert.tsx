@@ -19,10 +19,13 @@ interface Props {
 	btnRef: React.MutableRefObject<HTMLButtonElement | null>;
 }
 import { useSnippetsContext, useContentContext } from '@/App';
+import { useTranslation } from 'react-i18next';
 
 export const DeleteAlert = ({ snippetToDelete, btnRef }: Props) => {
 	const { updateShownSnippets } = useSnippetsContext();
 	const { snippetForEditor, setSnippetForEditor } = useContentContext();
+
+	const { t } = useTranslation();
 
 	async function deleteSnippet(id: number) {
 		try {
@@ -52,17 +55,16 @@ export const DeleteAlert = ({ snippetToDelete, btnRef }: Props) => {
 			<AlertDialogContent className='bg-zinc-900 border-red-600 text-white rounded'>
 				<AlertDialogHeader>
 					<AlertDialogTitle>
-						Want to delete {snippetToDelete?.name}?
+						{`${t('deleteTitle')} ${snippetToDelete?.name}`}?
 					</AlertDialogTitle>
-					<AlertDialogDescription>
-						This action cannot be undone. This will permanently delete this
-						snippet and there is no way of going back.
-					</AlertDialogDescription>
+					<AlertDialogDescription>{t('deleteText')}</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel className='bg-zinc-800'>Cancel</AlertDialogCancel>
+					<AlertDialogCancel className='bg-zinc-800'>
+						{t('cancelBtn')}
+					</AlertDialogCancel>
 					<AlertDialogAction className='bg-red-500' onClick={handleOnClick}>
-						Delete
+						{t('deleteBtn')}
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

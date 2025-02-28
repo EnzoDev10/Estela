@@ -17,6 +17,8 @@ import { Plus } from 'lucide-react';
 
 import { useSettingsContext } from '@/App';
 
+import { useTranslation } from 'react-i18next';
+
 interface Props {
 	action: string;
 	btnRef?: React.MutableRefObject<HTMLButtonElement | null>;
@@ -27,6 +29,8 @@ interface Props {
 export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 	const [open, setOpen] = useState(false);
 	const { theme } = useSettingsContext();
+	const { t } = useTranslation();
+
 	return (
 		<AlertDialog open={open} onOpenChange={setOpen}>
 			<AlertDialogTrigger asChild>
@@ -40,18 +44,16 @@ export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent
-				className={`${theme} bg-zinc-900 border-sidebar-ring text-white rounded-xl w-fit min-w-80`}
+				className={`${theme} bg-sidebar border-sidebar-ring text-sidebar-foreground rounded-xl w-fit min-w-80 flex flex-col gap-6`}
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>
 						{action === 'create'
-							? 'Create a Snippet'
-							: `Update ${snippetToUpdate?.name}`}
+							? t('createTitle')
+							: `${t('updateTitle')}${snippetToUpdate?.name}`}
 					</AlertDialogTitle>
 					<AlertDialogDescription>
-						{action === 'create'
-							? "Give it a recognizable name and a language to start. Don't worry to much about it, it can be changed later."
-							: ''}
+						{action === 'create' ? t('createDesc') : ''}
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<ActionForm
@@ -60,13 +62,13 @@ export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 					snippetToUpdate={snippetToUpdate}
 				/>
 				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
+					<AlertDialogCancel>{t('cancelBtn')}</AlertDialogCancel>
 					<Button
 						variant='save'
 						className='focus:bg-[var(--focus-color)] hover:bg-[var(--focus-color)] bg-sidebar-ring capitalize'
 						form='form-id'
 					>
-						{action}
+						{action === 'create' ? t('createBtn') : t('updateBtn')}
 					</Button>
 				</AlertDialogFooter>
 			</AlertDialogContent>

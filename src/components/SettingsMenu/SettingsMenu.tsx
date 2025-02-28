@@ -36,38 +36,45 @@ import { useSettingsContext } from '@/App';
 import { useState } from 'react';
 import { Settings2 } from 'lucide-react';
 
+import { useTranslation } from 'react-i18next';
+
 const themes = ['tokyo', 'codename', 'poimadres'] as const;
-const appLanguages = ['English', 'Spanish'] as const;
+const appLanguages = ['en', 'es'] as const;
 
 export const SettingsMenu = () => {
 	const [open, setOpen] = useState(false);
-	const { theme, setTheme, appLanguage, setAppLanguage } = useSettingsContext();
+	const { theme, setTheme } = useSettingsContext();
+
+	const { t, i18n } = useTranslation();
 
 	const formSchema = z.object({
 		theme: z.enum(themes),
 		appLanguage: z.enum(appLanguages),
 	});
 
+	let currentLanguage = localStorage.getItem('i18nextLng');
+
+	function selectDefaultValue() {
+		for (let i in appLanguages)
+			if (appLanguages[i] == currentLanguage) return appLanguages[i];
+		return 'en';
+	}
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			appLanguage: 'English',
+			appLanguage: selectDefaultValue(),
 		},
 	});
 
-	function changeSettings(theme: string, appLanguage: string) {
-		console.log(theme, appLanguage);
+	function ChangeSettings(theme: string, appLanguage: string) {
 		localStorage.setItem('theme', JSON.stringify(theme));
 		setTheme(theme);
-		/* 
-		setAppLanguage(appLanguage)
-		*/
+		i18n.changeLanguage(appLanguage);
 	}
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		const theme = values.theme;
-		const appLanguage = values.appLanguage;
-		changeSettings(theme, appLanguage);
+		ChangeSettings(values.theme, values.appLanguage);
 		setOpen(false);
 	}
 
@@ -80,10 +87,8 @@ export const SettingsMenu = () => {
 				className={`${theme} bg-zinc-900 border-sidebar-ring text-white rounded-xl w-fit min-w-80`}
 			>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Settings</AlertDialogTitle>
-					<AlertDialogDescription>
-						Change The app colors or appLanguage.
-					</AlertDialogDescription>
+					<AlertDialogTitle>{t('settingsTitle')}</AlertDialogTitle>
+					<AlertDialogDescription>{t('settingsDesc')}</AlertDialogDescription>
 				</AlertDialogHeader>
 				<Form {...form}>
 					<form
@@ -96,7 +101,9 @@ export const SettingsMenu = () => {
 							name='theme'
 							render={({ field }) => (
 								<FormItem className='flex items-center gap-6'>
-									<FormLabel className='text-left'>Themes</FormLabel>
+									<FormLabel className='text-left'>
+										{t('themesLabel')}
+									</FormLabel>
 									<Select onValueChange={field.onChange} defaultValue={theme}>
 										<FormControl className='w-48 ml-auto'>
 											<SelectTrigger>
@@ -132,8 +139,8 @@ export const SettingsMenu = () => {
 							control={form.control}
 							name='appLanguage'
 							render={({ field }) => (
-								<FormItem className='text-left flex items-center justify-end gap-6'>
-									<FormLabel>Language</FormLabel>
+								<FormItem className='text-left flex items-center justify-between  gap-6'>
+									<FormLabel>{t('appLanguageLabel')}</FormLabel>
 									<Select
 										onValueChange={field.onChange}
 										defaultValue={field.value}
@@ -144,11 +151,8 @@ export const SettingsMenu = () => {
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent className='bg-sidebar text-sidebar-foreground'>
-											{appLanguages.map((appLanguage) => (
-												<SelectItem key={appLanguage} value={appLanguage}>
-													{appLanguage}
-												</SelectItem>
-											))}
+											<SelectItem value='en'>English</SelectItem>
+											<SelectItem value='es'>Spanish</SelectItem>
 										</SelectContent>
 									</Select>
 
@@ -160,13 +164,13 @@ export const SettingsMenu = () => {
 				</Form>
 
 				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
+					<AlertDialogCancel>{t('cancelBtn')}</AlertDialogCancel>
 					<Button
 						variant='save'
 						className='focus:bg-[var(--focus-color)] hover:bg-[var(--focus-color)] bg-sidebar-ring capitalize'
 						form='form-theme'
 					>
-						Save Changes
+						{t('saveBtn')}
 					</Button>
 				</AlertDialogFooter>
 			</AlertDialogContent>
