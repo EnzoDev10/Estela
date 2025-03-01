@@ -91,13 +91,13 @@ export const FileNavigation = () => {
 				</SidebarMenuButton>
 
 				<SidebarMenuAction
-					className='text-zinc-700 mr-10'
+					className='text-zinc-600 mr-11 p-1'
 					onClick={() => handleUpdateAction(snippet)}
 				>
 					<Pen />
 				</SidebarMenuAction>
 				<SidebarMenuAction
-					className='text-zinc-700 '
+					className='text-zinc-600 mr-[2px] p-1'
 					onClick={() => handleDeleteAction(snippet)}
 				>
 					<TrashIcon />
@@ -116,15 +116,15 @@ export const FileNavigation = () => {
 	return (
 		<SidebarProvider className='bg-sidebar flex flex-col text-white'>
 			<SidebarTrigger
-				className='focus-visible:bg-sidebar-ring ml-auto p-3'
+				className='focus-visible:bg-sidebar-ring hover:bg-sidebar-ring hover:text-sidebar-foreground ml-auto p-3 md:mr-[10px]  '
 				title='Ctrl + b'
 			/>
 			<Sidebar className='mt-7 text-white border-none'>
 				<SidebarContent>
-					<SidebarGroup className={theme}>
+					<SidebarGroup className={`pt-1 ${theme}`}>
 						<SidebarGroupLabel className='p-0'>
 							{t('sidebarTitle')}
-							<div className='ml-auto flex gap-3 items-center mr-[2px]'>
+							<div className='ml-auto flex gap-3 items-center'>
 								<SettingsMenu />
 								<ActionDialog action='create' />
 							</div>

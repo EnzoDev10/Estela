@@ -40,11 +40,11 @@ export const ActionDialog = ({ action, btnRef, snippetToUpdate }: Props) => {
 					}  `}
 					ref={btnRef}
 				>
-					{action === 'create' ? <Plus /> : ''}
+					{action === 'create' ? <Plus className='min-w-6 min-h-6' /> : ''}
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent
-				className={`${theme} bg-sidebar border-sidebar-ring text-sidebar-foreground rounded-xl w-fit min-w-80 flex flex-col gap-6`}
+				className={`${theme} min-w-[340px] max-w-[360px] bg-sidebar border-sidebar-ring text-sidebar-foreground rounded-xl w-fit flex flex-col gap-6`}
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>
