@@ -81,7 +81,7 @@ function App() {
 		const saved = localStorage.getItem('theme');
 		if (saved) {
 			const initialValue = JSON.parse(saved);
-			return initialValue || 'tokyo';
+			return initialValue || 'Violet';
 		}
 	});
 	const [snippets, setSnippets] = useState<Snippet[]>([]);

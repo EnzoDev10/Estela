@@ -5,26 +5,42 @@
 @layer base {
 	:root {
 		--sidebar-background: 240 5.9% 10%;
-		--sidebar-foreground: 240 4.8% 95.9%;
-		--sidebar-primary: 224.3 76.3% 48%;
-		--sidebar-primary-foreground: 0 0% 100%;
-		--sidebar-border: 240 3.7% 15.9%;
-		--sidebar-ring: 282, 28%, 60%;
-		--radius: 0.5rem;
-
-		--editor-background: #24283b;
-		--focus-color: color-mix(in oklch, #b050ff 100%, #000 20%);
-	}
-	.codename {
-		--sidebar-background: 240 5.9% 10%;
 		--sidebar-foreground: 27 5% 90%;
-		--sidebar-primary: 27 96% 61%;
-		--sidebar-primary-foreground: 0 0% 0%;
-		--sidebar-border: 27 30% 18%;
-		--sidebar-ring: 337, 70%, 40%;
+		--sidebar-border: 239, 53%, 59%;
+		--sidebar-ring: 239, 53%, 59%;
 		--radius: 0.5rem;
 
-		--focus-color: color-mix(in oklch, #842142 100%, #000 20%);
-		--editor-background: #151515;
+		--violet-color: 296, 40%, 50%;
+		--green-color: 167, 98%, 39%;
+		--orange-color: 20, 72%, 52%;
 	}
+	.csb {
+		--sidebar-ring: var(--violet-color);
+
+		--focus-color: color-mix(in oklch, hsl(var(--violet-color)), #000 40%);
+		--editor-background: #1c2022;
+	}
+	.poimadres {
+		--sidebar-ring: var(--green-color);
+
+		--focus-color: color-mix(in oklch, hsl(var(--green-color)), #000 50%);
+		--editor-background: #1b1e28;
+	}
+
+	.firewatch {
+		--sidebar-ring: var(--orange-color);
+
+		--focus-color: color-mix(in oklch, hsl(var(--orange-color)), #000 50%);
+		--editor-background: #282c34;
+	}
+}
+
+.violet-circle {
+	background-color: hsl(var(--violet-color));
+}
+.green-circle {
+	background-color: hsl(var(--green-color));
+}
+.orange-circle {
+	background-color: hsl(var(--orange-color));
 }

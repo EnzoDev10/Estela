@@ -38,7 +38,7 @@ import { Settings2 } from 'lucide-react';
 
 import { useTranslation } from 'react-i18next';
 
-const themes = ['tokyo', 'codename', 'poimadres'] as const;
+const themes = ['csb', 'firewatch', 'poimadres'] as const;
 const appLanguages = ['en', 'es'] as const;
 
 export const SettingsMenu = () => {
@@ -80,7 +80,7 @@ export const SettingsMenu = () => {
 
 	return (
 		<AlertDialog open={open} onOpenChange={setOpen}>
-			<AlertDialogTrigger className='text-sidebar-ring focus-visible:ring-2 focus-visible:ring-sidebar-ring hover:bg-zinc-800 rounded p-1'>
+			<AlertDialogTrigger className='focus:outline-none text-sidebar-ring focus-visible:ring-2 focus-visible:ring-sidebar-ring hover:bg-zinc-800 rounded p-1'>
 				<Settings2 />
 			</AlertDialogTrigger>
 			<AlertDialogContent
@@ -111,22 +111,22 @@ export const SettingsMenu = () => {
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent className='bg-sidebar text-sidebar-foreground'>
-											<SelectItem value='tokyo'>
+											<SelectItem value='csb'>
 												<div className='flex gap-2'>
-													<div className='bg-indigo-600 w-5 h-5 rounded-full' />
-													<span> Tokyo</span>
-												</div>
-											</SelectItem>
-											<SelectItem value='codename'>
-												<div className='flex gap-2'>
-													<div className='bg-orange-600 w-5 h-5 rounded-full' />
-													<span> Codename</span>
+													<div className='violet-circle w-5 h-5 rounded-full' />
+													<span>CSB</span>
 												</div>
 											</SelectItem>
 											<SelectItem value='poimadres'>
 												<div className='flex gap-2'>
-													<div className='bg-teal-600 w-5 h-5 rounded-full' />
+													<div className='green-circle w-5 h-5 rounded-full' />
 													<span> Poimadres</span>
+												</div>
+											</SelectItem>
+											<SelectItem value='firewatch'>
+												<div className='flex gap-2'>
+													<div className='orange-circle w-5 h-5 rounded-full' />
+													<span> Firewatch</span>
 												</div>
 											</SelectItem>
 										</SelectContent>

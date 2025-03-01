@@ -3,8 +3,9 @@ import { Button } from '../ui/button';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { editor } from 'monaco-editor';
-import codename from './themes/codename.json';
-import tokyo from './themes/tokyo.json';
+import csb from './themes/csb.json';
+import firewatch from './themes/firewatch.json';
+import poimadres from './themes/poimadres.json';
 import { useSnippetsContext, useContentContext } from '@/App';
 
 import Database from '@tauri-apps/plugin-sql';
@@ -51,15 +52,22 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 		editorRef.current = editor;
 	}
 	function handleEditorDidMountBefore(monaco: Monaco) {
-		monaco.editor.defineTheme('codename', {
+		monaco.editor.defineTheme('csb', {
 			base: 'vs-dark',
 			inherit: true,
-			...codename,
+			...csb,
 		});
-		monaco.editor.defineTheme('tokyo', {
+
+		monaco.editor.defineTheme('firewatch', {
 			base: 'vs-dark',
 			inherit: true,
-			...tokyo,
+			...firewatch,
+		});
+
+		monaco.editor.defineTheme('poimadres', {
+			base: 'vs-dark',
+			inherit: true,
+			...poimadres,
 		});
 	}
 
