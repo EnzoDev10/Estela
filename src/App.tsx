@@ -78,11 +78,11 @@ function App() {
 		Snippet | undefined
 	>();
 	const [theme, setTheme] = useState(() => {
-		const saved = localStorage.getItem('theme');
-		if (saved) {
-			const initialValue = JSON.parse(saved);
-			return initialValue || 'Violet';
+		if (localStorage.getItem('theme') == undefined) {
+			localStorage.setItem('theme', 'csb');
 		}
+		let test = JSON.parse(localStorage.getItem('theme')!);
+		return test;
 	});
 	const [snippets, setSnippets] = useState<Snippet[]>([]);
 	/* 

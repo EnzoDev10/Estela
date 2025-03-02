@@ -45,6 +45,7 @@ export const SettingsMenu = () => {
 	const [open, setOpen] = useState(false);
 	const { theme, setTheme } = useSettingsContext();
 
+	let currentLanguage = JSON.parse(localStorage.getItem('appLanguage')!);
 	const { t, i18n } = useTranslation();
 
 	const formSchema = z.object({
@@ -52,23 +53,17 @@ export const SettingsMenu = () => {
 		appLanguage: z.enum(appLanguages),
 	});
 
-	let currentLanguage = localStorage.getItem('i18nextLng');
-
-	function selectDefaultValue() {
-		for (let i in appLanguages)
-			if (appLanguages[i] == currentLanguage) return appLanguages[i];
-		return 'en';
-	}
-
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			appLanguage: selectDefaultValue(),
+			theme: 'poimadres',
+			appLanguage: currentLanguage || 'es',
 		},
 	});
 
 	function ChangeSettings(theme: string, appLanguage: string) {
 		localStorage.setItem('theme', JSON.stringify(theme));
+		localStorage.setItem('appLanguage', JSON.stringify(appLanguage));
 		setTheme(theme);
 		i18n.changeLanguage(appLanguage);
 	}
@@ -143,7 +138,7 @@ export const SettingsMenu = () => {
 									<FormLabel>{t('appLanguageLabel')}</FormLabel>
 									<Select
 										onValueChange={field.onChange}
-										defaultValue={field.value}
+										defaultValue={currentLanguage}
 									>
 										<FormControl className='w-48'>
 											<SelectTrigger>

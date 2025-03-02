@@ -129,15 +129,6 @@ export const ActionForm = ({
 		},
 	});
 
-	// if updating a snippet, use said snippet's language as the default value for the select field.
-	function selectDefaultValue() {
-		if (snippetToUpdate) {
-			return snippetToUpdate.language;
-		} else {
-			return 'javascript';
-		}
-	}
-
 	// Inserts a snippet into the database Table.
 	async function setSnippet(snippet: Pick<Snippet, 'name' | 'language'>) {
 		try {
@@ -216,7 +207,9 @@ export const ActionForm = ({
 							<FormLabel>{t('languageLabel')}</FormLabel>
 							<Select
 								onValueChange={field.onChange}
-								defaultValue={selectDefaultValue()}
+								defaultValue={
+									snippetToUpdate ? snippetToUpdate.language : 'javascript'
+								}
 							>
 								<FormControl>
 									<SelectTrigger>
