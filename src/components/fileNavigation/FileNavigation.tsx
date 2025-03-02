@@ -68,7 +68,6 @@ export const FileNavigation = () => {
 
 	const ListOfSnippets = () => {
 		const { setOpenMobile } = useSidebar();
-
 		const reversedSnippets = snippets?.toReversed();
 
 		return reversedSnippets?.map((snippet: Snippet) => (
@@ -106,6 +105,19 @@ export const FileNavigation = () => {
 		));
 	};
 
+	const Trigger = () => {
+		const { state } = useSidebar();
+		console.log(state);
+		return (
+			<SidebarTrigger
+				className={`focus-visible:bg-sidebar-ring hover:bg-sidebar-ring hover:text-sidebar-foreground ml-auto p-3 ${
+					state == 'expanded' ? 'mr-[10px]' : ''
+				}`}
+				title='Ctrl + b'
+			/>
+		);
+	};
+
 	/* Shows the existing snippets on every reload or when opening the app. */
 	useEffect(() => {
 		updateShownSnippets();
@@ -115,10 +127,7 @@ export const FileNavigation = () => {
 
 	return (
 		<SidebarProvider className='bg-sidebar flex flex-col text-white'>
-			<SidebarTrigger
-				className='focus-visible:bg-sidebar-ring hover:bg-sidebar-ring hover:text-sidebar-foreground ml-auto p-3 md:mr-[10px]  '
-				title='Ctrl + b'
-			/>
+			<Trigger />
 			<Sidebar className='mt-7 text-white border-none'>
 				<SidebarContent>
 					<SidebarGroup className={`pt-1 ${theme}`}>
