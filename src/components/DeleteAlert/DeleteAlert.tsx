@@ -63,7 +63,10 @@ export const DeleteAlert = ({ snippetToDelete, btnRef }: Props) => {
 					<AlertDialogCancel className='bg-zinc-800'>
 						{t('cancelBtn')}
 					</AlertDialogCancel>
-					<AlertDialogAction className='bg-red-500' onClick={handleOnClick}>
+					<AlertDialogAction
+						className='bg-red-500 hover:bg-red-600 focus:bg-red-700'
+						onClick={handleOnClick}
+					>
 						{t('deleteBtn')}
 					</AlertDialogAction>
 				</AlertDialogFooter>
