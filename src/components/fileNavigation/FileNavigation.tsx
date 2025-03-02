@@ -75,7 +75,6 @@ export const FileNavigation = () => {
 				<SidebarMenuButton
 					onClick={() => {
 						setSnippetForEditor(snippet);
-						setSnippetForEditor(snippet);
 						setOpenMobile(false);
 					}}
 				>
