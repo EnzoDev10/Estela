@@ -27,14 +27,6 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 
 	const [wereChangesMade, setWereChangesMade] = useState(false);
 
-	// Declaring a variable just to update the content inside the editor.
-	// Tried to also use it for Props but it gave errors.
-
-	// ! revisar esto, puede que sea innecesario.
-	let snippet: Snippet;
-
-	if (currentSnippet) snippet = currentSnippet;
-
 	// function to update content of a snippet with the value inside editor.
 	async function editSnippetContent(newContent: string) {
 		try {
@@ -71,16 +63,11 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 		});
 	}
 
-	// ! revisar esto por que no lo entiendo.
 	function saveContent() {
-		if (wereChangesMade) {
-			const contentOfEditor = editorRef.current?.getValue();
-
-			if (contentOfEditor != undefined) {
-				snippet.content = contentOfEditor;
-				editSnippetContent(contentOfEditor);
-				setWereChangesMade(false);
-			}
+		const contentOfEditor = editorRef.current?.getValue();
+		if (wereChangesMade && contentOfEditor != undefined) {
+			editSnippetContent(contentOfEditor);
+			setWereChangesMade(false);
 		}
 	}
 
@@ -108,13 +95,6 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 		}
 	}
 
-	// Cleans the editor when the snippet is removed with the button that is inside the header.
-	function editorValueSetter() {
-		return currentSnippet ? currentSnippet?.content : '';
-	}
-
-	let editorValue = editorValueSetter();
-
 	return (
 		<main className='bg-sidebar w-full text-white'>
 			<header className='flex justify-between'>
@@ -139,7 +119,7 @@ export const SnippetEditor = ({ currentSnippet }: Props) => {
 			<Editor
 				language={currentSnippet?.language}
 				theme={theme}
-				value={editorValue}
+				value={currentSnippet ? currentSnippet?.content : ''}
 				options={{
 					fontSize: 14,
 					fontFamily: 'Jetbrains-Mono',
