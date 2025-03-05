@@ -124,7 +124,6 @@ export const ActionForm = ({
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			name: snippetToUpdate ? snippetToUpdate.name : '',
 			language: 'javascript',
 		},
 	});
@@ -188,6 +187,7 @@ export const ActionForm = ({
 				<FormField
 					control={form.control}
 					name='name'
+					defaultValue={snippetToUpdate ? snippetToUpdate.name : ''}
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>{t('nameLabel')}</FormLabel>
