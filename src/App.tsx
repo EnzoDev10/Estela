@@ -81,8 +81,9 @@ function App() {
 		if (localStorage.getItem('theme') == undefined) {
 			localStorage.setItem('theme', 'csb');
 		}
-		let test = JSON.parse(localStorage.getItem('theme')!);
-		return test;
+		// Removes double quotes from the string.
+		let theme = localStorage.getItem('theme')!.replace(/^"(.*)"$/, '$1');
+		return theme;
 	});
 	const [snippets, setSnippets] = useState<Snippet[]>([]);
 	/* 
