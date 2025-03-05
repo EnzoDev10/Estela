@@ -105,12 +105,12 @@ export const FileNavigation = () => {
 	};
 
 	const Trigger = () => {
-		const { state } = useSidebar();
-		console.log(state);
+		const { state, isMobile } = useSidebar();
+
 		return (
 			<SidebarTrigger
 				className={`focus-visible:bg-sidebar-ring hover:bg-sidebar-ring hover:text-sidebar-foreground ml-auto p-3 ${
-					state == 'expanded' ? 'mr-[10px]' : ''
+					state == 'expanded' && !isMobile ? 'mr-[10px]' : ''
 				}`}
 				title='Ctrl + b'
 			/>
